@@ -5,8 +5,8 @@ const bcrypt = require('bcrypt-nodejs')
 
 const KhachHang = new Schema({
     hoten: { type: String, require: true },
-    sdt: { type: String, maxlength: 12 },
-    makhau: { type: String, require: true},
+    sdt: { type: String, maxlength: 10, unique: true, require: true },
+    matkhau: { type: String, require: true},
     gioitinh: { type: String, maxlength: 10 },
     hinhanh: { type: String, maxlength: 255 },
     diachi: { type: String, maxlength: 255 },

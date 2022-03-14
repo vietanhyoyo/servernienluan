@@ -1,7 +1,7 @@
 const KhachHang = require('../models/KhachHang')
 const Mongoose = require('mongoose');
 const ID = Mongoose.Types.ObjectId;
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcrypt-nodejs');
 
 class CustomerController {
     /**'/customer' */
@@ -9,27 +9,41 @@ class CustomerController {
         res.send('CUSTOMER');
     }
     /**'/customer/themkhachhang' */
-    themKhachHang(req, res) {
+    async themKhachHang(req, res) {
+        const data = req.body;
+        let insert = true;
+        let mk = '';
+
+        await KhachHang.find({ sdt: data.phone })
+            .then((kh) => {
+                if (kh.length !== 0) {
+                    res.send('Số điện thoại đã được sử dụng!');
+                    insert = false;
+                }
+            })
+
+        mk = await bcrypt.hashSync(data.password,bcrypt.genSaltSync(5),null);
+
         const khachhang = new KhachHang({
-            hoten: 'Lê Thị B',
-            sdt: '0121231539',
-            makhau: bcrypt.hashSync('123456', bcrypt.genSaltSync(5), null),
-            gioitinh: 'nữ',
-            hinhanh: 'https://mayvesinhmiennam.com/wp-content/uploads/2021/06/j6.jpg',
-            diachi: 'đ Mậu Thân',
-            quanhuyen: '6221baaf5bd2fa44e9896439',
+            hoten: data.name,
+            sdt: data.phone,
+            matkhau: mk,
         });
-        khachhang.save()
-            .then(() => console.log('Them Khach Hang'));
+
+        if (insert)
+            khachhang.save()
+                .then(() => res.send(khachhang))
+                .catch(() => res.send('Đã có lỗi!'))
+
     }
     /**'/customer/danhsachkhachhang' */
     async danhsachKhachHang(req, res) {
-        const khachhang = await KhachHang.find({}).populate({ path: 'quanhuyen', model: 'QuanHuyen'});
+        const khachhang = await KhachHang.find({}).populate({ path: 'quanhuyen', model: 'QuanHuyen' });
         res.json(khachhang);
     }
     /**'/customer/danhsachkhachhangmatkhau' */
     async danhsachKhachHangMatKhau(req, res) {
-        const khachhang = await KhachHang.find({}).populate('hoten','matkhau');
+        const khachhang = await KhachHang.find({}).populate('hoten', 'matkhau');
         res.json(khachhang);
     }
 }

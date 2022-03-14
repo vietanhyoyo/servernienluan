@@ -7,6 +7,7 @@ const customerRouter = require('./customer')
 const promotionRouter = require('./promotion')
 const evaluateRouter = require('./evaluate')
 const messageRouter = require('./message')
+const loginRouter = require('./login')
 const siteRouter = require('./site')
 
 function route(app) {
@@ -19,6 +20,7 @@ function route(app) {
     app.use('/comment',commentRouter)
     app.use('/message', messageRouter)
     app.use('/customer', customerRouter)
+    app.use('/login', loginRouter)
     app.use('/products', productsRouter)
     app.use('/', siteRouter)
 
