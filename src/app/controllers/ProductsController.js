@@ -16,22 +16,36 @@ class ProductsController {
 
     /**Them san pham */
     themSanPham(req, res) {
-        const sanpham = new SanPham({
-            tensanpham: 'Cải ngọt',
-            mota: `<p><strong >Cải ngọt </strong>là một trong những loại <strong >rau củ </strong>rất quen thuộc đối với người Việt Nam. Với cải ngọt, chúng ta có thể chế biến được rất nhiều món ăn hấp dẫn và giàu dinh dưỡng. Mỗi mớ rau cải ngọt được nuôi trồng và chăm chút rất cẩn thận. Những sản phẩm được bày bán trên gian hàng đều đã trải qua quá trình tuyển chọn kỹ càng. Sản phẩm cũng được bảo quản cẩn thận và chặt chẽ để mang tới cho khách hàng những sản phẩm có chất lượng tốt nhất.</p>
+        const sanpham = new SanPham({ 
+            tensanpham: 'Dưa lưới Đế Vương ruột xanh Queen size',
+            mota: `<h3>Thông tin sản phẩm</h3>
+            <p>Trong quả dưa lưới chứa nhiều loại vitamin A, C, E và axit folic, độ ngọt cao, đem lại nhiều tác dụng cho cơ thể.</p>
+            <ul>
+            <li>Tăng cường hệ miễn dịch và phòng chống ung thư.</li>
+            <li>Chứa nhiều chất xơ, phòng chống táo bó hiệu quả.</li>
+            <li>Cải thiện hô hấp, giảm mệt mỏi, chứa mất ngủ.</li>
+            <li>Chứa hàm lượng axit folic cao, tốt cho thai nhi và phụ nữ mang thai.</li>
+            <li>Phòng ngừa loãng xương, ổn định huyết áp...</li>
+            </ul>
+            <h3>Hướng dẫn sử dụng</h3>
+            <ul>
+            <li>Gọt vỏ, ăn trực tiếp.</li>
+            <li>Ngon hơn khi ướp lạnh trước khi ăn.</li>
+            </ul>
             <p><strong >Lưu ý:</strong></p>
             <p><strong >- Hạn sử dụng thực tế quý khách vui lòng xem trên bao bì.</strong></p>
-            <p><strong >- Hình sản phẩm chỉ mang tính chất minh họa, hình thực tế bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>`,
-            hinhanh: 'https://cdn-crownx.winmart.vn/images/prod/162428528941310053859-KG-Cai-thao-hoa-tien-DL-L1-MT.jpg',
-            loaisanpham: '621f07caf7c1e1e143f1cb60',
-            giamacdinh: 13000,
+            <p><strong >- Hình sản phẩm chỉ mang tính chất minh họa, hình bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>`,
+            hinhanh: ['https://cdn-vincart.vinid.net/cdn-cgi/image/fit=scale-down,w=1200,quality=75,f=auto/vm/product/1621850347700/8936099692234.jpg',
+            'https://fujimart.vn/image/cache/catalog/rau%20cu%20qua/dua%20luoi%20taki-502x502.png'],
+            loaisanpham: '6229fa0c668f87e0cdc9bfc4',
+            gianiemyet: 59000,
             trangthai: 'Còn bán',
-            soluong: 12,
-            donvitinh: 'kg',
-            nhacungcap: 'Vườn xanh',
+            soluong: 40,
+            donvitinh: 'Quả',
+            nhacungcap: 'Nhà trồng',
         });
         sanpham.save()
-            .then(() => console.log('them san pham'));
+            .then(() => res.json(sanpham));
     }
 
     /**Hien danh sach san pham trong csdl */
@@ -167,6 +181,16 @@ class ProductsController {
                 })
                 res.send(datas);
             })
+    }
+
+    /*Tìm các sản phẩm theo loại sản phẩm theo id */
+    traveSanPhamtheoIDLoaiSanPham(req, res){
+        const idloaisanpham = req.body.id;
+        SanPham.find({loaisanpham: idloaisanpham}, (err,sp) => {
+            if(!err){
+                res.send(sp);
+            }
+        })
     }
 }
 

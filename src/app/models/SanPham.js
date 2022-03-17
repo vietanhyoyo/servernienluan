@@ -4,13 +4,13 @@ const Schema = mongoose.Schema;
 
 const SanPham = new Schema({
     tensanpham: { type: String, maxLength: 255, unique: true },
-    mota: { type: String, maxLength: 1000 },
-    hinhanh: { type: String, maxLength: 255 },
+    mota: { type: String, maxLength: 1200 },
+    hinhanh: [{ type: String, maxLength: 255 }],
     loaisanpham: {
         type: Schema.Types.ObjectId,
         ref: 'LoaiSanPham'
     },
-    giamacdinh: { type: Number, default: 10 },
+    gianiemyet: { type: Number, default: 10 },
     trangthai: { type: String, maxlength: 255 },
     soluong: { type: Number, default: 0 },
     donvitinh: { type: String, maxlength: 255 },

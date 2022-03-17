@@ -8,7 +8,7 @@ const KhachHang = new Schema({
     sdt: { type: String, maxlength: 10, unique: true, require: true },
     matkhau: { type: String, require: true},
     gioitinh: { type: String, maxlength: 10 },
-    hinhanh: { type: String, maxlength: 255 },
+    hinhanh: { type: String, maxlength: 255, default: '../images/no-avatar.png' },
     diachi: { type: String, maxlength: 255 },
     quanhuyen: { type: Schema.Types.ObjectId, ref: 'QuanHuyen' },
     createdAt: { type: Date, default: Date.now },
