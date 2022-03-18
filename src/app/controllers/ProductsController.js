@@ -192,6 +192,13 @@ class ProductsController {
             }
         })
     }
+
+    /*Tìm loại sản phẩm theo id */
+    traveLoaiSanPhamID(req, res, next){
+        LoaiSanPham.findById(req.body.id)
+            .then(data => res.send(data))
+            .catch(next);
+    }
 }
 
 module.exports = new ProductsController;

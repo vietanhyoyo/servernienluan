@@ -10,20 +10,20 @@ class EmployeeController{
     }
 
     /**'/employee/themnhanvien' */
-    themNhanVien(req, res) {
+    async themNhanVien(req, res) {
+        const mk = await bcrypt.hashSync('12345678', bcrypt.genSaltSync(5), null)
         const nhanvien = new NhanVien({
-            hoten: 'Lê Quốc Anh',
-            sdt: '0999111153',
-            makhau: bcrypt.hashSync('123456', bcrypt.genSaltSync(5), null),
+            hoten: 'Hồ Quang Hiếu',
+            sdt: '9876543210',
+            matkhau: mk,
             gioitinh: 'nam',
-            ngaysinh: new Date('02/02/1997'),
-            hinhanh: 'http://images6.fanpop.com/image/photos/36200000/Levi-Rivaille-Shingeki-no-Kyojin-image-levi-rivaille-shingeki-no-kyojin-36225480-440-545.png',
+            ngaysinh: new Date('07/03/2000'),
+            hinhanh: 'https://avatarfiles.alphacoders.com/201/201013.png',
             diachi: 'đ 30/4',
-            quanhuyen: '6221baaf5bd2fa44e9896439',
-            chucvu: 'quản lý'
+            chucvu: 'admin'
         });
         nhanvien.save()
-            .then(() => console.log('Them Nhan Vien'));
+            .then(() => res.json(nhanvien));
     }
 }
 

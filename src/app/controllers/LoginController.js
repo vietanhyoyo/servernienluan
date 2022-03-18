@@ -15,10 +15,17 @@ class LoginController {
         const khachhang = await KhachHang.findOne({ sdt: req.body.name });
         if (khachhang !== null) {
             const bool = bcrypt.compareSync(req.body.password, khachhang.matkhau);
-            if (bool) {res.send(khachhang);}
-            else {res.send('Sai mật khẩu!');}
+            if (bool) { res.send(khachhang); }
+            else { res.send('Sai mật khẩu!'); }
         }
-        else {res.send('Tài khoản bị sai!');}
+        else {
+            const nhanvien = await NhanVien.findOne({ sdt: req.body.name });
+            if (nhanvien !== null) {
+                const bool = bcrypt.compareSync(req.body.password, nhanvien.matkhau);
+                if (bool) { res.send(nhanvien); }
+                else { res.send('Sai mật khẩu!'); }
+            } else { res.send('Tài khoản bị sai!'); }
+        }
     }
     /**Nhan gia tri session dang nhap */
     // laygiatrisessionDangNhap(req, res){
@@ -26,12 +33,18 @@ class LoginController {
     //         res.send(req.session.username)
     //     }
     // }
-    async layuserDangNhap(req, res){
+    async layuserDangNhap(req, res) {
         const data = req.body.id;
-        const user = await KhachHang.findById(data);
-        if(user!==null){
+        let user = await KhachHang.findById(data);
+        if (user !== null) {
             res.send(user);
-        }else res.send('Khong tim thay')
+        } else {
+            user = await NhanVien.findById(data);
+            if (user !== null) {
+                res.send(user);
+            }
+            else res.send('Khong tim thay');
+        }
     }
 
     // async layTaiKhoan(req, res){

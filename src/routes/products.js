@@ -6,6 +6,7 @@ const productsController = require('../app/controllers/ProductsController')
 /**Cap nhat */
 route.get('/capnhatgiasanpham', productsController.capnhatGiaSanPham)
 /**Hien thi */
+route.post('/loaisanphamid', productsController.traveLoaiSanPhamID)
 route.post('/sanphamtheoloaisanpham', productsController.traveSanPhamtheoIDLoaiSanPham)
 route.get('/loaihang', productsController.danhsachLoaiHang)
 route.get('/loaisanpham',productsController.danhsachLoaiSanPham)

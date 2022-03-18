@@ -21,7 +21,7 @@ class CustomerController {
                     insert = false;
                 }
             })
-
+        /*Ma hoa mat khau */
         mk = await bcrypt.hashSync(data.password,bcrypt.genSaltSync(5),null);
 
         const khachhang = new KhachHang({
