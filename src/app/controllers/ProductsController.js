@@ -16,7 +16,7 @@ class ProductsController {
 
     /**Them san pham */
     themSanPham(req, res) {
-        const sanpham = new SanPham({ 
+        const sanpham = new SanPham({
             tensanpham: 'Dưa lưới Đế Vương ruột xanh Queen size',
             mota: `<h3>Thông tin sản phẩm</h3>
             <p>Trong quả dưa lưới chứa nhiều loại vitamin A, C, E và axit folic, độ ngọt cao, đem lại nhiều tác dụng cho cơ thể.</p>
@@ -36,7 +36,7 @@ class ProductsController {
             <p><strong >- Hạn sử dụng thực tế quý khách vui lòng xem trên bao bì.</strong></p>
             <p><strong >- Hình sản phẩm chỉ mang tính chất minh họa, hình bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>`,
             hinhanh: ['https://cdn-vincart.vinid.net/cdn-cgi/image/fit=scale-down,w=1200,quality=75,f=auto/vm/product/1621850347700/8936099692234.jpg',
-            'https://fujimart.vn/image/cache/catalog/rau%20cu%20qua/dua%20luoi%20taki-502x502.png'],
+                'https://fujimart.vn/image/cache/catalog/rau%20cu%20qua/dua%20luoi%20taki-502x502.png'],
             loaisanpham: '6229fa0c668f87e0cdc9bfc4',
             gianiemyet: 59000,
             trangthai: 'Còn bán',
@@ -184,18 +184,26 @@ class ProductsController {
     }
 
     /*Tìm các sản phẩm theo loại sản phẩm theo id */
-    traveSanPhamtheoIDLoaiSanPham(req, res){
+    traveSanPhamtheoIDLoaiSanPham(req, res) {
         const idloaisanpham = req.body.id;
-        SanPham.find({loaisanpham: idloaisanpham}, (err,sp) => {
-            if(!err){
+        SanPham.find({ loaisanpham: idloaisanpham }, (err, sp) => {
+            if (!err) {
                 res.send(sp);
             }
         })
     }
 
     /*Tìm loại sản phẩm theo id */
-    traveLoaiSanPhamID(req, res, next){
+    traveLoaiSanPhamID(req, res, next) {
         LoaiSanPham.findById(req.body.id)
+            .then(data => res.send(data))
+            .catch(next);
+    }
+
+    /*Tìm kiếm tên sản phẩm */
+    timtenSanPham(req, res, next) {
+        const data = req.body.id;
+        SanPham.find({ 'tensanpham': new RegExp(data, 'i') })
             .then(data => res.send(data))
             .catch(next);
     }
