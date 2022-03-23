@@ -207,6 +207,12 @@ class ProductsController {
             .then(data => res.send(data))
             .catch(next);
     }
+
+
+    /**Them san pham */
+    themSanPhamHinhAnh(req, res, next) {
+        res.send(req.files);
+    }
 }
 
 module.exports = new ProductsController;
