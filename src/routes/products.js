@@ -6,7 +6,7 @@ const productsController = require('../app/controllers/ProductsController')
 /**Khai bao noi luu file */
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './public/productimages');
+        cb(null, './src/productimages');
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
@@ -19,7 +19,7 @@ const upload = multer({ storage: storage });
 route.get('/capnhatgiasanpham', productsController.capnhatGiaSanPham)
 /**Hien thi */
 
-
+//route.get('/hinhanh', productsController.layHinhAnh)
 route.post('/timtensanpham', productsController.timtenSanPham)
 route.post('/loaisanphamid', productsController.traveLoaiSanPhamID)
 route.post('/sanphamtheoloaisanpham', productsController.traveSanPhamtheoIDLoaiSanPham)

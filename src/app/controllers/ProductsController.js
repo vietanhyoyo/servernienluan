@@ -14,40 +14,6 @@ class ProductsController {
         res.send('PRODUCT')
     }
 
-    /**Them san pham */
-    themSanPham(req, res) {
-        const sanpham = new SanPham({
-            tensanpham: 'Dưa lưới Đế Vương ruột xanh Queen size',
-            mota: `<h3>Thông tin sản phẩm</h3>
-            <p>Trong quả dưa lưới chứa nhiều loại vitamin A, C, E và axit folic, độ ngọt cao, đem lại nhiều tác dụng cho cơ thể.</p>
-            <ul>
-            <li>Tăng cường hệ miễn dịch và phòng chống ung thư.</li>
-            <li>Chứa nhiều chất xơ, phòng chống táo bó hiệu quả.</li>
-            <li>Cải thiện hô hấp, giảm mệt mỏi, chứa mất ngủ.</li>
-            <li>Chứa hàm lượng axit folic cao, tốt cho thai nhi và phụ nữ mang thai.</li>
-            <li>Phòng ngừa loãng xương, ổn định huyết áp...</li>
-            </ul>
-            <h3>Hướng dẫn sử dụng</h3>
-            <ul>
-            <li>Gọt vỏ, ăn trực tiếp.</li>
-            <li>Ngon hơn khi ướp lạnh trước khi ăn.</li>
-            </ul>
-            <p><strong >Lưu ý:</strong></p>
-            <p><strong >- Hạn sử dụng thực tế quý khách vui lòng xem trên bao bì.</strong></p>
-            <p><strong >- Hình sản phẩm chỉ mang tính chất minh họa, hình bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>`,
-            hinhanh: ['https://cdn-vincart.vinid.net/cdn-cgi/image/fit=scale-down,w=1200,quality=75,f=auto/vm/product/1621850347700/8936099692234.jpg',
-                'https://fujimart.vn/image/cache/catalog/rau%20cu%20qua/dua%20luoi%20taki-502x502.png'],
-            loaisanpham: '6229fa0c668f87e0cdc9bfc4',
-            gianiemyet: 59000,
-            trangthai: 'Còn bán',
-            soluong: 40,
-            donvitinh: 'Quả',
-            nhacungcap: 'Nhà trồng',
-        });
-        sanpham.save()
-            .then(() => res.json(sanpham));
-    }
-
     /**Hien danh sach san pham trong csdl */
     async danhsachSanPham(req, res) {
         const sanpham = await SanPham.find({}).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
@@ -208,11 +174,43 @@ class ProductsController {
             .catch(next);
     }
 
-
+    // layHinhAnh(req, res) {
+    //     const filepath = '~/public/productimages/bboy.png';
+    //     res.sendFile(filepath);
+    // }
     /**Them san pham */
+    themSanPham(req, res) {
+        const dataproduct = req.body.product;
+
+        /*Sử lý hình ảnh thêm localhost:5001/id= vào địa chỉ hình 
+        ảnh để có thể truy cập được hình ảnh từ http */
+        let imgs = [];
+        if(dataproduct.hinhanh !== undefined && dataproduct.hinhanh !== []){
+            const ha = dataproduct.hinhanh;
+            imgs = ha.map((ele) => {
+                return 'http://localhost:5001/?id=' + ele;
+            })
+            dataproduct.hinhanh = imgs;
+        }
+
+        /*Lưu sản phẩm */
+        const sanpham = new SanPham(dataproduct);
+        sanpham.save()
+            .then(() => res.send(dataproduct));
+    }
+
+    /**Them hinh anh san pham */
     themSanPhamHinhAnh(req, res, next) {
         res.send(req.files);
     }
+
+    /**Lấy hình ảnh */
+    // layHinhAnh(req, res) {
+    //     const idhinhanh = req.query.id;
+    //     const img = require(`../../../public/productimages/${idhinhanh}`);
+    //     res.send(img);
+    // }
+
 }
 
 module.exports = new ProductsController;

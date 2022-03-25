@@ -11,10 +11,10 @@ const SanPham = new Schema({
         ref: 'LoaiSanPham'
     },
     gianiemyet: { type: Number, default: 10 },
-    trangthai: { type: String, maxlength: 255 },
+    trangthai: { type: String, maxlength: 255 , default: 'Còn bán'},
     soluong: { type: Number, default: 0 },
     donvitinh: { type: String, maxlength: 255 },
-    nhacungcap: { type: String, maxlength: 255 },
+    nhacungcap: { type: String, maxlength: 255 , default: 'Trống' },
     sanphamcungloai: [{ type: Schema.Types.ObjectId, ref: 'SanPham' }],
     daban: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
