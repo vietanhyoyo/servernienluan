@@ -26,11 +26,7 @@ class MessageController {
     }
     /**Lấy danh sách khách hàng nhắn tin */
     async laydsKhachHang(req, res) {
-        // TinNhan.find({}, 'nguoigui', (err, doc) => {
-        //     if(!err){
-        //         res.send(doc);
-        //     }
-        // });
+
         const idusers = await TinNhan.distinct('nguoigui');
         const kh = await KhachHang.where('_id').in(idusers);
         const data = [];
@@ -41,6 +37,15 @@ class MessageController {
                 hoten: kh[i].hoten,
                 hinhanh: kh[i].hinhanh,
                 tinnhan: await TinNhan.findOne({ nguoigui: kh[i]._id }).sort('-thoigian')  // give me the max
+            }
+        }
+        for (let i = 0; i < kh.length - 1; i++) {
+            for (let j = i + 1; j < kh.length; j++) {
+                if (data[j].tinnhan.thoigian > data[i].tinnhan.thoigian) {
+                    let temp = data[i];
+                    data[i] = data[j];
+                    data[j] = temp;
+                }
             }
         }
         res.send(data);
