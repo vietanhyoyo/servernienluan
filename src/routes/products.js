@@ -28,6 +28,7 @@ route.get('/loaisanpham', productsController.danhsachLoaiSanPham)
 route.get('/sanpham', productsController.danhsachSanPham)
 route.get('/loaihangloaisanpham', productsController.danhsachLoaiHangvaLoaiSanPham)
 route.get('/timidloaihangsangloaisanpham', productsController.timIdLoaiHangsangLoaiSanPham)
+route.post('/hienthisanpham', productsController.hienthiSanPham)
 
 /**Them */
 route.post('/themsanphamhinhanh', upload.array('fileImage',12), productsController.themSanPhamHinhAnh)

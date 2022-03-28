@@ -14,6 +14,12 @@ class ProductsController {
         res.send('PRODUCT')
     }
 
+    /**Hien thi san pham theo id*/
+    async hienthiSanPham(req, res) {
+        const sanpham = await SanPham.findById(req.body._id).populate({ path: 'loaisanpham', model: 'LoaiSanPham'});
+        res.send(sanpham);
+    }
+
     /**Hien danh sach san pham trong csdl */
     async danhsachSanPham(req, res) {
         const sanpham = await SanPham.find({}).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
