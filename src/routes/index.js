@@ -9,9 +9,10 @@ const evaluateRouter = require('./evaluate')
 const messageRouter = require('./message')
 const loginRouter = require('./login')
 const siteRouter = require('./site')
-
+const staffRouter = require('./staff')
 function route(app) {
-
+   
+    app.use('/staff', staffRouter)
     app.use('/employee', employeeRouter)
     app.use('/order', orderRouter)
     app.use('/evaluate', evaluateRouter)
@@ -23,7 +24,7 @@ function route(app) {
     app.use('/login', loginRouter)
     app.use('/products', productsRouter)
     app.use('/', siteRouter)
-
+    
 }
 
 module.exports = route;

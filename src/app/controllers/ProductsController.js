@@ -51,7 +51,7 @@ class ProductsController {
     /**Hien danh sach san pham trong csdl */
     async danhsachSanPham(req, res) {
         const sanpham = await SanPham.find({}).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
-        res.json(sanpham)
+        res.send(sanpham)
     }
 
     /**Tra ve danh sach loai hang(nhom loai san pham) */
@@ -100,7 +100,7 @@ class ProductsController {
     /**Hien thi loai san pham co kem theo loai hang */
     async hienthiLoaiSanPham(req, res) {
         const loaisanpham = await LoaiSanPham.find({}).populate({ path: 'loaihang', model: 'LoaiHang' });
-        res.json(loaisanpham);
+        res.send(loaisanpham);
     }
 
     /**Them loai san pham/produsts/themloaisanpham */
