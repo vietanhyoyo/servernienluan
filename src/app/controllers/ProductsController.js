@@ -2,6 +2,7 @@ const SanPham = require('../models/SanPham');
 const LoaiHang = require('../models/LoaiHang');
 const LoaiSanPham = require('../models/LoaiSanPham');
 const GiaSanPham = require('../models/GiaSanPham');
+const priceController = require('./PriceController');
 const Mongoose = require('mongoose');
 const ID = Mongoose.Types.ObjectId;
 
@@ -185,7 +186,7 @@ class ProductsController {
         /*Sử lý hình ảnh thêm localhost:5001/id= vào địa chỉ hình 
         ảnh để có thể truy cập được hình ảnh từ http */
         let imgs = [];
-        if(dataproduct.hinhanh !== undefined && dataproduct.hinhanh !== []){
+        if (dataproduct.hinhanh !== undefined && dataproduct.hinhanh !== []) {
             const ha = dataproduct.hinhanh;
             imgs = ha.map((ele) => {
                 return 'http://localhost:5001/?id=' + ele;
@@ -195,8 +196,16 @@ class ProductsController {
 
         /*Lưu sản phẩm */
         const sanpham = new SanPham(dataproduct);
-        sanpham.save()
-            .then(() => res.send(dataproduct));
+        sanpham.save(function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                priceController.capNhatGiaSanPham(result._id, result.gianiemyet);
+                res.send(result)
+            }
+        })
+
     }
 
     /**Them hinh anh san pham */
