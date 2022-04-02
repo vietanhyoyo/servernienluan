@@ -151,13 +151,27 @@ class ProductsController {
     }
 
     /*Tìm các sản phẩm theo loại sản phẩm theo id */
-    traveSanPhamtheoIDLoaiSanPham(req, res) {
+    async traveSanPhamtheoIDLoaiSanPham(req, res) {
         const idloaisanpham = req.body.id;
-        SanPham.find({ loaisanpham: idloaisanpham }, (err, sp) => {
-            if (!err) {
-                res.send(sp);
+        const sanpham = await SanPham.find({ loaisanpham: idloaisanpham })
+            .select('_id tensanpham hinhanh gianiemyet donvitinh');
+        const data = [];
+        for (let i = 0; i < sanpham.length; i++) {
+            const giasanpham = await GiaSanPham.findOne({ sanpham: sanpham[i]._id })
+                .populate({ path: 'khuyenmai', model: 'KhuyenMai', select: 'phantram' })
+                .select('_id giaban khuyenmai')
+
+            const newEle = {
+                _id: sanpham[i]._id,
+                tensanpham: sanpham[i].tensanpham,
+                hinhanh: sanpham[i].hinhanh,
+                gianiemyet: sanpham[i].gianiemyet,
+                donvitinh: sanpham[i].donvitinh,
+                giasanpham: giasanpham
             }
-        })
+            data.push(newEle);
+        }
+        res.send(data);
     }
 
     /*Tìm loại sản phẩm theo id */
