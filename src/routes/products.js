@@ -20,6 +20,7 @@ route.get('/capnhatgiasanpham', productsController.capnhatGiaSanPham)
 /**Hien thi */
 
 //route.get('/hinhanh', productsController.layHinhAnh)
+route.post('/timsanphamtheoid', productsController.timSanPhamTheoID)
 route.post('/timtensanpham', productsController.timtenSanPham)
 route.post('/loaisanphamid', productsController.traveLoaiSanPhamID)
 route.post('/sanphamtheoloaisanpham', productsController.traveSanPhamtheoIDLoaiSanPham)
@@ -40,6 +41,7 @@ route.get('/themgiasanpham', productsController.themGiaSanPham)
 route.post('/xoaloaihang', productsController.xoaLoaiHangID)
 route.post('/xoaloaisanpham', productsController.xoaLoaiSanPhamID)
 /**Sửa */
+route.post('/suasanpham', productsController.suaSanPham)
 route.post('/sualoaihang', productsController.suaLoaiHangID)
 route.post('/sualoaisanpham', productsController.suaLoaiSanPhamID)
 /**index */

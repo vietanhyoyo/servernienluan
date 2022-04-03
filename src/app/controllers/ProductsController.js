@@ -17,7 +17,7 @@ class ProductsController {
 
     /**Hien thi san pham theo id*/
     async hienthiSanPham(req, res) {
-        const sanpham = await SanPham.findById(req.body._id).populate({ path: 'loaisanpham', model: 'LoaiSanPham'});
+        const sanpham = await SanPham.findById(req.body._id).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
         res.send(sanpham);
     }
 
@@ -233,13 +233,21 @@ class ProductsController {
         res.send(req.files);
     }
 
-    /**Lấy hình ảnh */
-    // layHinhAnh(req, res) {
-    //     const idhinhanh = req.query.id;
-    //     const img = require(`../../../public/productimages/${idhinhanh}`);
-    //     res.send(img);
-    // }
+    /** '/timsanphamtheoid' lấy thông tin sản phẩm thông qua id */
+    async timSanPhamTheoID(req, res) {
+        const sanpham = await SanPham.findById(req.body._id);
+        res.send(sanpham);
+    }
 
+    /**Sửa doi san pham */
+    suaSanPham(req, res) {
+        const product = req.body.product;
+        SanPham.updateOne({ _id: product._id }, product)
+            .then(() => {
+                priceController.capNhatGiaSanPhamTheoKhuyenMai(product._id);
+                res.send(product)
+            })
+    }
 }
 
 module.exports = new ProductsController;
