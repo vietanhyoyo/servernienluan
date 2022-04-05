@@ -33,6 +33,8 @@ route.post('/hienthisanpham', productsController.hienthiSanPham)
 
 /**Them */
 route.post('/themsanphamhinhanh', upload.array('fileImage',12), productsController.themSanPhamHinhAnh)
+route.post('/themsanphamcungloai', productsController.themSanPhamCungLoai)
+route.post('/laysanphamcungloai', productsController.laySanPhamCungLoai)
 route.post('/themsanpham', productsController.themSanPham)
 route.post('/themloaihang', productsController.themLoaiHang)
 route.post('/themloaisanpham', productsController.themLoaiSanPham)
@@ -40,6 +42,8 @@ route.get('/themgiasanpham', productsController.themGiaSanPham)
 /**Xoa */
 route.post('/xoaloaihang', productsController.xoaLoaiHangID)
 route.post('/xoaloaisanpham', productsController.xoaLoaiSanPhamID)
+route.post('/xoasanphamcungloai', productsController.xoaSanPhamCungLoai)
+route.post('/xoasanpham', productsController.xoaSanPham)
 /**Sửa */
 route.post('/suasanpham', productsController.suaSanPham)
 route.post('/sualoaihang', productsController.suaLoaiHangID)

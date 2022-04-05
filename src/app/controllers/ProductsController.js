@@ -23,8 +23,9 @@ class ProductsController {
 
     /**Hien danh sach san pham trong csdl */
     async danhsachSanPham(req, res) {
-        const sanpham = await SanPham.find({}).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
-        res.json(sanpham)
+        /**$nin là ngoại trừ */
+        const sanpham = await SanPham.find({ trangthai: { $nin: 'Ẩn' } }).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
+        res.send(sanpham)
     }
 
     /**Tra ve danh sach loai hang(nhom loai san pham) */
@@ -200,7 +201,7 @@ class ProductsController {
     //     res.sendFile(filepath);
     // }
     /**Them san pham */
-    themSanPham(req, res) {
+    async themSanPham(req, res) {
         const dataproduct = req.body.product;
 
         /*Sử lý hình ảnh thêm localhost:5001/id= vào địa chỉ hình 
@@ -215,16 +216,12 @@ class ProductsController {
         }
 
         /*Lưu sản phẩm */
-        const sanpham = new SanPham(dataproduct);
-        sanpham.save(function (err, result) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                priceController.capNhatGiaSanPham(result._id, result.gianiemyet);
-                res.send(result)
-            }
-        })
+        const sanpham = await SanPham.create(dataproduct);
+
+        const arr = [sanpham._id];
+        await priceController.capNhatGiaSanPham(sanpham._id, sanpham.gianiemyet);
+        await SanPham.updateOne({ _id: sanpham._id }, { sanphamcungloai: arr });
+        res.send(sanpham)
 
     }
 
@@ -248,6 +245,66 @@ class ProductsController {
                 res.send(product)
             })
     }
+
+    /**Thêm sản phẩm cùng */
+    async themSanPhamCungLoai(req, res) {
+        const product = req.body.product;
+
+        const sanphamMain = await SanPham.findById(req.body.idProduct)
+            .select('_id tensanpham sanphamcungloai');
+
+        /**Thêm san phẩm mới*/
+        const newProduct = await SanPham.create(product);
+        await priceController.capNhatGiaSanPham(newProduct._id, newProduct.gianiemyet);
+
+        const spcungloai = [...sanphamMain.sanphamcungloai, newProduct._id];
+
+        for (let i = 0; i < spcungloai.length; i++) {
+            await SanPham.updateOne({ _id: spcungloai[i] }, { sanphamcungloai: spcungloai });
+        }
+
+        res.send(newProduct);
+    }
+    /**Lấy sản phẩm cùng loại thùng lon lốc kết chai */
+    async laySanPhamCungLoai(req, res) {
+        const sanpham = await SanPham.findById(req.body._id).select('_id tensanpham donvitinh hinhanh');
+        res.send(sanpham);
+    }
+
+    /**Xóa sản phẩm cùng loại */
+    async xoaSanPhamCungLoai(req, res) {
+        const id = req.body.id;
+
+        if (id === undefined) res.send('Có lỗi');
+
+        const deleteProduct = await SanPham.findById(id);
+        const oldTypeList = deleteProduct.sanphamcungloai;
+        const newTypeList = oldTypeList.filter(ele => {
+            return ele.toString() !== id;
+        })
+
+        await SanPham.updateMany({ sanphamcungloai: oldTypeList }, { sanphamcungloai: newTypeList })
+        await GiaSanPham.deleteOne({ sanpham: id })
+        await SanPham.deleteOne({ _id: id })
+        res.send(newTypeList);
+
+    }
+
+    /**Xoa san pham khi nhan được id của san phẩm đó*/
+    async xoaSanPham(req, res) {
+        const id = req.body.id;
+        
+        const sanpham = await SanPham.findById(id);
+        const list = sanpham.sanphamcungloai;
+
+        for (let i = list.length - 1; i >= 0; i--) {
+            await GiaSanPham.deleteOne({ sanpham: list[i] });
+            await SanPham.deleteOne({ _id: list[i] });
+        }
+
+        res.send('xóa sản phẩm thành công!');
+    }
+
 }
 
 module.exports = new ProductsController;
