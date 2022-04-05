@@ -1,29 +1,80 @@
 const KhuyenMai = require('../models/KhuyenMai');
+const Mongoose = require('mongoose');
+const ID = Mongoose.Types.ObjectId;
+const priceController = require('./PriceController');
 
 class KhuyenMaiController {
     index(req, res) {
         res.send('KhuyenMai')
     }
 
+    /**Cap nhat gia cua san pham */
+    // async capNhatGiaSanPham(promotion, idProduct) {
+
+    //     const giaSP = await GiaSanPham.findOne({ sanpham: idProduct });
+    //     if (giaSP === null) {
+    //         await GiaSanPham.create({ sanpham: ID(idProduct) })
+    //     }
+    // }
 
     /**Them khuyen mai */
     themKhuyenMai(req, res) {
-        const khuyenmai = new KhuyenMai({
-            tenkhuyenmai: 'Khuyến mãi 8/3',
-            ngaybd: '03/06/2022',
-            ngaykt: '03/09/2022',
-            phantram: 20,
-            trangthai: 'Đang diễn ra',
-            danhsachsanpham: ['622360830078ccaedbd24efd', '622361673d8cca6948dd92cf'],
-        })
-        khuyenmai.save()
-            .then(() => res.json(khuyenmai))
+        const data = req.body.promotion;
+
+        KhuyenMai.create(data)
+            .then(res.send(data))
     }
 
     /**Xem danh sach khuyen mai */
-    async danhsachKhuyenMai(req, res){
-        const khuyenmai = await KhuyenMai.find({}).populate({path: 'danhsachsanpham', model: 'SanPham'});
-        res.json(khuyenmai)
+    async danhsachKhuyenMai(req, res) {
+        const khuyenmai = await KhuyenMai.find({})
+            .populate({ path: 'danhsachsanpham', model: 'SanPham' })
+            .sort('-ngaybd');
+
+        res.send(khuyenmai)
+
+
+    }
+
+    /**Thêm sản phẩm vào khuyến mãi */
+    async themSanPhamVaoKhuyenMai(req, res) {
+        const promotion = req.body.promotion;
+        const idProduct = req.body.idProduct;
+
+        promotion.danhsachsanpham.push(idProduct);
+
+        await KhuyenMai.updateOne({ _id: promotion._id }, promotion)
+            .then(() => res.send(promotion))
+
+        priceController.capNhatGiaSanPham(idProduct);
+
+    }
+    /**Xoa khuyen mai */
+    xoaKhuyenMai(req, res) {
+        const promotion = req.body.promotion;
+        KhuyenMai.deleteOne({ _id: promotion._id }, (err) => {
+            if (!err) {
+                res.send(promotion)
+            }
+        })
+    }
+    /**Xóa sản phẩm khuyến mãi */
+    async xoaSanPham(req, res) {
+        if (req.body.promotion && req.body.idSP) {
+            const promotion = req.body.promotion;
+            const idSP = req.body.idSP;
+
+            const khuyenmai = await KhuyenMai.findById(promotion._id)
+
+            const arr = khuyenmai.danhsachsanpham;
+            const new_arr = arr.filter(item => {
+                return item.toString() != idSP;
+            });
+
+            promotion.danhsachsanpham = new_arr;
+            KhuyenMai.updateOne({ _id: promotion._id }, promotion)
+                .then(() => res.send(promotion));
+        }
     }
 }
 

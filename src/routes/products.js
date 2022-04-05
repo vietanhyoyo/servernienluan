@@ -20,6 +20,7 @@ route.get('/capnhatgiasanpham', productsController.capnhatGiaSanPham)
 /**Hien thi */
 
 //route.get('/hinhanh', productsController.layHinhAnh)
+route.post('/timsanphamtheoid', productsController.timSanPhamTheoID)
 route.post('/timtensanpham', productsController.timtenSanPham)
 route.post('/loaisanphamid', productsController.traveLoaiSanPhamID)
 route.post('/sanphamtheoloaisanpham', productsController.traveSanPhamtheoIDLoaiSanPham)
@@ -32,6 +33,8 @@ route.post('/hienthisanpham', productsController.hienthiSanPham)
 
 /**Them */
 route.post('/themsanphamhinhanh', upload.array('fileImage',12), productsController.themSanPhamHinhAnh)
+route.post('/themsanphamcungloai', productsController.themSanPhamCungLoai)
+route.post('/laysanphamcungloai', productsController.laySanPhamCungLoai)
 route.post('/themsanpham', productsController.themSanPham)
 route.post('/themloaihang', productsController.themLoaiHang)
 route.post('/themloaisanpham', productsController.themLoaiSanPham)
@@ -39,7 +42,10 @@ route.get('/themgiasanpham', productsController.themGiaSanPham)
 /**Xoa */
 route.post('/xoaloaihang', productsController.xoaLoaiHangID)
 route.post('/xoaloaisanpham', productsController.xoaLoaiSanPhamID)
+route.post('/xoasanphamcungloai', productsController.xoaSanPhamCungLoai)
+route.post('/xoasanpham', productsController.xoaSanPham)
 /**Sửa */
+route.post('/suasanpham', productsController.suaSanPham)
 route.post('/sualoaihang', productsController.suaLoaiHangID)
 route.post('/sualoaisanpham', productsController.suaLoaiSanPhamID)
 /**index */
