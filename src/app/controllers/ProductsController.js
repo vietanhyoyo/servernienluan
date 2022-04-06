@@ -160,7 +160,7 @@ class ProductsController {
     /*Tìm các sản phẩm theo loại sản phẩm theo id */
     async traveSanPhamtheoIDLoaiSanPham(req, res) {
         const idloaisanpham = req.body.id;
-        const sanpham = await SanPham.find({ loaisanpham: idloaisanpham })
+        const sanpham = await SanPham.find({ loaisanpham: idloaisanpham, trangthai: { $nin: 'Ẩn' } })
             .select('_id tensanpham hinhanh gianiemyet donvitinh');
         const data = [];
         for (let i = 0; i < sanpham.length; i++) {
@@ -267,7 +267,7 @@ class ProductsController {
     }
     /**Lấy sản phẩm cùng loại thùng lon lốc kết chai */
     async laySanPhamCungLoai(req, res) {
-        const sanpham = await SanPham.findById(req.body._id).select('_id tensanpham donvitinh hinhanh');
+        const sanpham = await SanPham.findById(req.body._id).select('_id tensanpham donvitinh hinhanh gianiemyet');
         res.send(sanpham);
     }
 
@@ -293,7 +293,7 @@ class ProductsController {
     /**Xoa san pham khi nhan được id của san phẩm đó*/
     async xoaSanPham(req, res) {
         const id = req.body.id;
-        
+
         const sanpham = await SanPham.findById(id);
         const list = sanpham.sanphamcungloai;
 
