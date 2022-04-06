@@ -10,20 +10,39 @@ class EmployeeController{
     }
 
     /**'/employee/themnhanvien' */
-    async themNhanVien(req, res) {
-        const mk = await bcrypt.hashSync('12345678', bcrypt.genSaltSync(5), null)
+     themNhanVien(req, res) {
+       if(req.body){
+        const a  = req.body
         const nhanvien = new NhanVien({
-            hoten: 'Hồ Quang Hiếu',
-            sdt: '9876543210',
-            matkhau: mk,
-            gioitinh: 'nam',
-            ngaysinh: new Date('07/03/2000'),
-            hinhanh: 'https://avatarfiles.alphacoders.com/201/201013.png',
-            diachi: 'đ 30/4',
-            chucvu: 'admin'
-        });
-        nhanvien.save()
-            .then(() => res.json(nhanvien));
+            hoten : a.hoten,
+            sdt : a.sdt,
+            matkhau : a.matkhau,
+            gioitinh : a.gioitinh,
+            ngaysinh : a.ngaysinh,
+            diachi : a.diachi,
+            chucvu : a.chucvu,
+            email : a.email,
+            hinhanh : ''
+         })
+         nhanvien.save()
+         .then(() => {
+             res.send('Đã up lên')
+             res.send(a);
+         })
+       } 
+        
+      
+    }
+
+
+
+    danhsachNhanVien(req, res) {
+        NhanVien.find({}, function (err, nhanvien) {
+            if (!err) {
+                nhanvien = nhanvien.map(c => c.toObject());
+                res.send(nhanvien);
+            } else res.status(400).json({ error: 'ERROR!!!' })
+        })
     }
 }
 
