@@ -7,6 +7,12 @@ class OrderController {
     index(req, res) {
         res.send('Order')
     }
+    /** Hiển thị giỏ hàng */
+    async hienThiGioHang(req, res){
+        const order = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
+        const chitietdathang = await ChiTietDatHang.find({dathang: order._id}).populate({ path: 'sanpham', model: 'SanPham' });
+        res.send(chitietdathang);
+    }
 
     themDatHang(req, res) {
         const dathang = new DatHang({
@@ -18,14 +24,29 @@ class OrderController {
     }
 
     /**Them chi tiet dat hang */
-    themChiTietDatHang(req, res) {
-        const chitietdathang = new ChiTietDatHang({
-            dathang: '62240bdd502aa751d8c57403',
-            sanpham: '622360830078ccaedbd24efd',
-            soluong: 2
-        });
-        chitietdathang.save()
-            .then(() => res.json(chitietdathang));
+    async themChiTietDatHang(req, res) {
+        const Cart = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng'})
+            if(Cart!==null){
+                const chitietdathang = new ChiTietDatHang({
+                    dathang: Cart._id,
+                    sanpham: req.body.idSP,
+                    soluong: req.body.soluong
+                });
+                chitietdathang.save()
+                    .then(() => res.send(chitietdathang));
+            }
+            else{
+                await DatHang.create({khachhang: req.body.khachhang, trangthai: 'giỏ hàng'})
+                const newCart = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng'})
+                const chitietdathang = new ChiTietDatHang({
+                    dathang: newCart._id,
+                    sanpham: req.body.idSP,
+                    soluong: req.body.soluong
+                });
+                chitietdathang.save()
+                    .then(() => res.send(chitietdathang));
+                // res.send("that bai");
+            }
     }
 
     /**Cap nhat trang thai da ban va tang doanh so*/
