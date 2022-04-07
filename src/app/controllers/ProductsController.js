@@ -10,7 +10,7 @@ class ProductsController {
         res.send('Products')
     }
 
-    show(req, res) {
+    show(req, res) { bv
         res.send('PRODUCT')
     }
 
