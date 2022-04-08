@@ -8,10 +8,16 @@ class OrderController {
         res.send('Order')
     }
     /** Hiển thị giỏ hàng */
-    async hienThiGioHang(req, res){
-        const order = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
-        const chitietdathang = await ChiTietDatHang.find({dathang: order._id}).populate({ path: 'sanpham', model: 'SanPham' });
-        res.send(chitietdathang);
+    async hienThiGioHang(req, res) {
+        const order = await DatHang.findOne({ khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
+        if (order === null) res.send([]);
+        else
+            ChiTietDatHang.find({ dathang: order._id })
+                .populate({ path: 'sanpham', model: 'SanPham' })
+                .exec((err, doc) => {
+                    if (err) res.send([]);
+                    else res.send(doc);
+                })
     }
 
     themDatHang(req, res) {
@@ -25,28 +31,28 @@ class OrderController {
 
     /**Them chi tiet dat hang */
     async themChiTietDatHang(req, res) {
-        const Cart = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng'})
-            if(Cart!==null){
-                const chitietdathang = new ChiTietDatHang({
-                    dathang: Cart._id,
-                    sanpham: req.body.idSP,
-                    soluong: req.body.soluong
-                });
-                chitietdathang.save()
-                    .then(() => res.send(chitietdathang));
-            }
-            else{
-                await DatHang.create({khachhang: req.body.khachhang, trangthai: 'giỏ hàng'})
-                const newCart = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng'})
-                const chitietdathang = new ChiTietDatHang({
-                    dathang: newCart._id,
-                    sanpham: req.body.idSP,
-                    soluong: req.body.soluong
-                });
-                chitietdathang.save()
-                    .then(() => res.send(chitietdathang));
-                // res.send("that bai");
-            }
+        const Cart = await DatHang.findOne({ khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
+        if (Cart !== null) {
+            const chitietdathang = new ChiTietDatHang({
+                dathang: Cart._id,
+                sanpham: req.body.idSP,
+                soluong: req.body.soluong
+            });
+            chitietdathang.save()
+                .then(() => res.send(chitietdathang));
+        }
+        else {
+            await DatHang.create({ khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
+            const newCart = await DatHang.findOne({ khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
+            const chitietdathang = new ChiTietDatHang({
+                dathang: newCart._id,
+                sanpham: req.body.idSP,
+                soluong: req.body.soluong
+            });
+            chitietdathang.save()
+                .then(() => res.send(chitietdathang));
+            // res.send("that bai");
+        }
     }
 
     /**Cap nhat trang thai da ban va tang doanh so*/
