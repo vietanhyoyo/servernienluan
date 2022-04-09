@@ -33,6 +33,7 @@ class AddressController{
             .then( () => console.log('Tao model thanh cong'))
             .then( () => res.json(quanhuyen) );
     }
+    /** */
 }
 
 module.exports = new AddressController;

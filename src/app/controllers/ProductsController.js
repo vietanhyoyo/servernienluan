@@ -2,6 +2,7 @@ const SanPham = require('../models/SanPham');
 const LoaiHang = require('../models/LoaiHang');
 const LoaiSanPham = require('../models/LoaiSanPham');
 const GiaSanPham = require('../models/GiaSanPham');
+const priceController = require('./PriceController');
 const Mongoose = require('mongoose');
 const ID = Mongoose.Types.ObjectId;
 
@@ -14,38 +15,31 @@ class ProductsController {
         res.send('PRODUCT')
     }
 
-    /**Them san pham */
-    themSanPham(req, res) {
-        const sanpham = new SanPham({ 
-            tensanpham: 'Dưa lưới Đế Vương ruột xanh Queen size',
-            mota: `<h3>Thông tin sản phẩm</h3>
-            <p>Trong quả dưa lưới chứa nhiều loại vitamin A, C, E và axit folic, độ ngọt cao, đem lại nhiều tác dụng cho cơ thể.</p>
-            <ul>
-            <li>Tăng cường hệ miễn dịch và phòng chống ung thư.</li>
-            <li>Chứa nhiều chất xơ, phòng chống táo bó hiệu quả.</li>
-            <li>Cải thiện hô hấp, giảm mệt mỏi, chứa mất ngủ.</li>
-            <li>Chứa hàm lượng axit folic cao, tốt cho thai nhi và phụ nữ mang thai.</li>
-            <li>Phòng ngừa loãng xương, ổn định huyết áp...</li>
-            </ul>
-            <h3>Hướng dẫn sử dụng</h3>
-            <ul>
-            <li>Gọt vỏ, ăn trực tiếp.</li>
-            <li>Ngon hơn khi ướp lạnh trước khi ăn.</li>
-            </ul>
-            <p><strong >Lưu ý:</strong></p>
-            <p><strong >- Hạn sử dụng thực tế quý khách vui lòng xem trên bao bì.</strong></p>
-            <p><strong >- Hình sản phẩm chỉ mang tính chất minh họa, hình bao bì của sản phẩm tùy thời điểm sẽ khác so với thực tế.</strong></p>`,
-            hinhanh: ['https://cdn-vincart.vinid.net/cdn-cgi/image/fit=scale-down,w=1200,quality=75,f=auto/vm/product/1621850347700/8936099692234.jpg',
-            'https://fujimart.vn/image/cache/catalog/rau%20cu%20qua/dua%20luoi%20taki-502x502.png'],
-            loaisanpham: '6229fa0c668f87e0cdc9bfc4',
-            gianiemyet: 59000,
-            trangthai: 'Còn bán',
-            soluong: 40,
-            donvitinh: 'Quả',
-            nhacungcap: 'Nhà trồng',
-        });
-        sanpham.save()
-            .then(() => res.json(sanpham));
+    /**Hien thi san pham theo id*/
+    async hienthiSanPham(req, res) {
+        const sanpham = await SanPham.findById(req.body._id).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
+
+        const giasanpham = await GiaSanPham.findOne({ sanpham: sanpham._id })
+            .populate({ path: 'khuyenmai', model: 'KhuyenMai' })
+            .select('_id giaban khuyenmai')
+
+        const newEle = {
+            _id: sanpham._id,
+            tensanpham: sanpham.tensanpham,
+            mota: sanpham.mota,
+            hinhanh: sanpham.hinhanh,
+            loaisanpham: sanpham.loaisanpham,
+            gianiemyet: sanpham.gianiemyet,
+            trangthai: sanpham.trangthai,
+            soluong: sanpham.soluong,
+            donvitinh: sanpham.donvitinh,
+            nhacungcap: sanpham.nhacungcap,
+            sanphamcungloai: sanpham.sanphamcungloai,
+            daban: sanpham.daban,
+            giasanpham: giasanpham
+        }
+
+        res.send(newEle);
     }
 
     /**Hien danh sach san pham trong csdl */
@@ -70,6 +64,15 @@ class ProductsController {
                 loaisanpham = loaisanpham.map(c => c.toObject());
                 res.send(loaisanpham);
             } else res.status(400).json({ error: 'ERROR!!!' })
+        })
+    }
+
+    /**Lấy don vi tinh */
+    layDonViTinh(req, res) {
+        SanPham.findById(req.body.id).select('_id donvitinh').exec((err, result) => {
+            if (!err) {
+                res.send(result);
+            }
         })
     }
     /**Them moi 1 loai hang */
@@ -184,21 +187,153 @@ class ProductsController {
     }
 
     /*Tìm các sản phẩm theo loại sản phẩm theo id */
-    traveSanPhamtheoIDLoaiSanPham(req, res){
+    async traveSanPhamtheoIDLoaiSanPham(req, res) {
         const idloaisanpham = req.body.id;
-        SanPham.find({loaisanpham: idloaisanpham}, (err,sp) => {
-            if(!err){
-                res.send(sp);
+        const sanpham = await SanPham.find({ loaisanpham: idloaisanpham, trangthai: { $nin: 'Ẩn' } })
+            .select('_id tensanpham hinhanh gianiemyet donvitinh');
+        const data = [];
+        for (let i = 0; i < sanpham.length; i++) {
+            const giasanpham = await GiaSanPham.findOne({ sanpham: sanpham[i]._id })
+                .populate({ path: 'khuyenmai', model: 'KhuyenMai', select: 'phantram' })
+                .select('_id giaban khuyenmai')
+
+            const newEle = {
+                _id: sanpham[i]._id,
+                tensanpham: sanpham[i].tensanpham,
+                hinhanh: sanpham[i].hinhanh,
+                gianiemyet: sanpham[i].gianiemyet,
+                donvitinh: sanpham[i].donvitinh,
+                giasanpham: giasanpham
             }
-        })
+            data.push(newEle);
+        }
+        res.send(data);
     }
 
     /*Tìm loại sản phẩm theo id */
-    traveLoaiSanPhamID(req, res, next){
+    traveLoaiSanPhamID(req, res, next) {
         LoaiSanPham.findById(req.body.id)
             .then(data => res.send(data))
             .catch(next);
     }
+
+    /*Tìm kiếm tên sản phẩm */
+    timtenSanPham(req, res, next) {
+        const data = req.body.id;
+        SanPham.find({ 'tensanpham': new RegExp(data, 'i') })
+            .then(data => res.send(data))
+            .catch(next);
+    }
+
+    // layHinhAnh(req, res) {
+    //     const filepath = '~/public/productimages/bboy.png';
+    //     res.sendFile(filepath);
+    // }
+    /**Them san pham */
+    async themSanPham(req, res) {
+        const dataproduct = req.body.product;
+
+        /*Sử lý hình ảnh thêm localhost:5001/id= vào địa chỉ hình 
+        ảnh để có thể truy cập được hình ảnh từ http */
+        let imgs = [];
+        if (dataproduct.hinhanh !== undefined && dataproduct.hinhanh !== []) {
+            const ha = dataproduct.hinhanh;
+            imgs = ha.map((ele) => {
+                return 'http://localhost:5001/?id=' + ele;
+            })
+            dataproduct.hinhanh = imgs;
+        }
+
+        /*Lưu sản phẩm */
+        const sanpham = await SanPham.create(dataproduct);
+
+        const arr = [sanpham._id];
+        await priceController.capNhatGiaSanPham(sanpham._id, sanpham.gianiemyet);
+        await SanPham.updateOne({ _id: sanpham._id }, { sanphamcungloai: arr });
+        res.send(sanpham)
+
+    }
+
+    /**Them hinh anh san pham */
+    themSanPhamHinhAnh(req, res, next) {
+        res.send(req.files);
+    }
+
+    /** '/timsanphamtheoid' lấy thông tin sản phẩm thông qua id */
+    async timSanPhamTheoID(req, res) {
+        const sanpham = await SanPham.findById(req.body._id);
+        res.send(sanpham);
+    }
+
+    /**Sửa doi san pham */
+    suaSanPham(req, res) {
+        const product = req.body.product;
+        SanPham.updateOne({ _id: product._id }, product)
+            .then(() => {
+                priceController.capNhatGiaSanPhamTheoKhuyenMai(product._id);
+                res.send(product)
+            })
+    }
+
+    /**Thêm sản phẩm cùng */
+    async themSanPhamCungLoai(req, res) {
+        const product = req.body.product;
+
+        const sanphamMain = await SanPham.findById(req.body.idProduct)
+            .select('_id tensanpham sanphamcungloai');
+
+        /**Thêm san phẩm mới*/
+        const newProduct = await SanPham.create(product);
+        await priceController.capNhatGiaSanPham(newProduct._id, newProduct.gianiemyet);
+
+        const spcungloai = [...sanphamMain.sanphamcungloai, newProduct._id];
+
+        for (let i = 0; i < spcungloai.length; i++) {
+            await SanPham.updateOne({ _id: spcungloai[i] }, { sanphamcungloai: spcungloai });
+        }
+
+        res.send(newProduct);
+    }
+    /**Lấy sản phẩm cùng loại thùng lon lốc kết chai */
+    async laySanPhamCungLoai(req, res) {
+        const sanpham = await SanPham.findById(req.body._id).select('_id tensanpham donvitinh hinhanh gianiemyet');
+        res.send(sanpham);
+    }
+
+    /**Xóa sản phẩm cùng loại */
+    async xoaSanPhamCungLoai(req, res) {
+        const id = req.body.id;
+
+        if (id === undefined) res.send('Có lỗi');
+
+        const deleteProduct = await SanPham.findById(id);
+        const oldTypeList = deleteProduct.sanphamcungloai;
+        const newTypeList = oldTypeList.filter(ele => {
+            return ele.toString() !== id;
+        })
+
+        await SanPham.updateMany({ sanphamcungloai: oldTypeList }, { sanphamcungloai: newTypeList })
+        await GiaSanPham.deleteOne({ sanpham: id })
+        await SanPham.deleteOne({ _id: id })
+        res.send(newTypeList);
+
+    }
+
+    /**Xoa san pham khi nhan được id của san phẩm đó*/
+    async xoaSanPham(req, res) {
+        const id = req.body.id;
+
+        const sanpham = await SanPham.findById(id);
+        const list = sanpham.sanphamcungloai;
+
+        for (let i = list.length - 1; i >= 0; i--) {
+            await GiaSanPham.deleteOne({ sanpham: list[i] });
+            await SanPham.deleteOne({ _id: list[i] });
+        }
+
+        res.send('xóa sản phẩm thành công!');
+    }
+
 }
 
 module.exports = new ProductsController;
