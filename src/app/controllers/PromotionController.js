@@ -44,9 +44,10 @@ class KhuyenMaiController {
         promotion.danhsachsanpham.push(idProduct);
 
         await KhuyenMai.updateOne({ _id: promotion._id }, promotion)
-            .then(() => res.send(promotion))
 
-        priceController.capNhatGiaSanPham(idProduct);
+        await priceController.capNhatGiaSanPham(idProduct);
+        await priceController.capNhatGiaSanPhamTheoKhuyenMai(idProduct);
+        res.send(promotion);
 
     }
     /**Xoa khuyen mai */

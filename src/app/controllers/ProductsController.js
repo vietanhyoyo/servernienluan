@@ -18,7 +18,28 @@ class ProductsController {
     /**Hien thi san pham theo id*/
     async hienthiSanPham(req, res) {
         const sanpham = await SanPham.findById(req.body._id).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
-        res.send(sanpham);
+
+        const giasanpham = await GiaSanPham.findOne({ sanpham: sanpham._id })
+            .populate({ path: 'khuyenmai', model: 'KhuyenMai' })
+            .select('_id giaban khuyenmai')
+
+        const newEle = {
+            _id: sanpham._id,
+            tensanpham: sanpham.tensanpham,
+            mota: sanpham.mota,
+            hinhanh: sanpham.hinhanh,
+            loaisanpham: sanpham.loaisanpham,
+            gianiemyet: sanpham.gianiemyet,
+            trangthai: sanpham.trangthai,
+            soluong: sanpham.soluong,
+            donvitinh: sanpham.donvitinh,
+            nhacungcap: sanpham.nhacungcap,
+            sanphamcungloai: sanpham.sanphamcungloai,
+            daban: sanpham.daban,
+            giasanpham: giasanpham
+        }
+
+        res.send(newEle);
     }
 
     /**Hien danh sach san pham trong csdl */
@@ -44,6 +65,15 @@ class ProductsController {
                 loaisanpham = loaisanpham.map(c => c.toObject());
                 res.send(loaisanpham);
             } else res.status(400).json({ error: 'ERROR!!!' })
+        })
+    }
+
+    /**Lấy don vi tinh */
+    layDonViTinh(req, res) {
+        SanPham.findById(req.body.id).select('_id donvitinh').exec((err, result) => {
+            if (!err) {
+                res.send(result);
+            }
         })
     }
     /**Them moi 1 loai hang */
@@ -160,7 +190,7 @@ class ProductsController {
     /*Tìm các sản phẩm theo loại sản phẩm theo id */
     async traveSanPhamtheoIDLoaiSanPham(req, res) {
         const idloaisanpham = req.body.id;
-        const sanpham = await SanPham.find({ loaisanpham: idloaisanpham })
+        const sanpham = await SanPham.find({ loaisanpham: idloaisanpham, trangthai: { $nin: 'Ẩn' } })
             .select('_id tensanpham hinhanh gianiemyet donvitinh');
         const data = [];
         for (let i = 0; i < sanpham.length; i++) {
@@ -267,7 +297,7 @@ class ProductsController {
     }
     /**Lấy sản phẩm cùng loại thùng lon lốc kết chai */
     async laySanPhamCungLoai(req, res) {
-        const sanpham = await SanPham.findById(req.body._id).select('_id tensanpham donvitinh hinhanh');
+        const sanpham = await SanPham.findById(req.body._id).select('_id tensanpham donvitinh hinhanh gianiemyet');
         res.send(sanpham);
     }
 
@@ -293,7 +323,7 @@ class ProductsController {
     /**Xoa san pham khi nhan được id của san phẩm đó*/
     async xoaSanPham(req, res) {
         const id = req.body.id;
-        
+
         const sanpham = await SanPham.findById(id);
         const list = sanpham.sanphamcungloai;
 
