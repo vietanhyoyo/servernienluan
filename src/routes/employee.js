@@ -2,6 +2,8 @@ const express = require('express');
 const route = express.Router();
 const employeeController = require('../app/controllers/EmployeeController')
 
+route.post('/xoanhanvien', employeeController.xoaNhanVien)
+route.post('/laylaimatkhau', employeeController.laylaimatkhauNhanVien)
 route.post('/suathongtinnhanvien', employeeController.suaNhanVien)
 route.post('/themnhanvien', employeeController.themNhanVien)
 route.get('/danhsachnhanvien', employeeController.danhsachNhanVien)
