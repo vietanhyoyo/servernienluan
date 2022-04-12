@@ -10,7 +10,7 @@ const SanPham = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'LoaiSanPham'
     },
-    gianiemyet: { type: Number, default: 10 },
+    gianiemyet: { type: Number, default: 0 },
     trangthai: { type: String, maxlength: 255 , default: 'Còn bán'},
     soluong: { type: Number, default: 0 },
     donvitinh: { type: String, maxlength: 255 },
