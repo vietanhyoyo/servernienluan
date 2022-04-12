@@ -48,13 +48,8 @@ http.createServer(function (req, res) {
     /**Đọc file ảnh và gửi */
     fs.readFile(__dirname + `/productimages/${filePath}`, function (err, data) {
         if (err) res.end(null);
-<<<<<<< HEAD
-        else // Fail if the file can't be read.
-        res.end(data); // Send the file data to the browser.
-=======
         else
             res.end(data); // Send the file data to the browser.
->>>>>>> main
     });
 
 }).listen(5001, "127.0.0.1");

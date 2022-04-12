@@ -6,7 +6,8 @@ const orderController = require('../app/controllers/OrderController')
 route.get('/capnhatdathang', orderController.capnhatDatHang)
 route.post('/hienthigiohang', orderController.hienThiGioHang)
 route.post('/themchitietdathang', orderController.themChiTietDatHang)
+route.post('/xoachitietdathang',orderController.xoaChiTietDatHang)
 route.get('/themdathang', orderController.themDatHang)
-route.get('/', orderController.index)
+route.get('', orderController.index)
 
 module.exports = route

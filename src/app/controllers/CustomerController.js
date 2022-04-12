@@ -11,7 +11,7 @@ class CustomerController {
     }
      /**'/customer/infokhachhangtheoid' */
     async inFoKhachHang(req, res) {
-        const khachhang = await KhachHang.findById("622efe3359050ca85dfe6d68").populate({ path: 'quanhuyen', model: 'QuanHuyen' });
+        const khachhang = await KhachHang.findOne({_id: req.body.id});
         res.send(khachhang);
     }
     /**'/customer/themkhachhang' */

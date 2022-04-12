@@ -19,7 +19,12 @@ class OrderController {
                     else res.send(doc);
                 })
     }
-
+    /** Xóa chi tiết đặt hàng*/
+    async xoaChiTietDatHang(req,res){
+        const id = req.body.id;
+        ChiTietDatHang.deleteOne({_id: id})
+        .then(()=>res.send('dã xóa thành công'));
+    }
     themDatHang(req, res) {
         const dathang = new DatHang({
             khachhang: '62220877e86f17e5c21810ac',
