@@ -1,4 +1,5 @@
 const KhachHang = require('../models/KhachHang')
+const QuanHuyen = require('../models/QuanHuyen')
 const Mongoose = require('mongoose');
 const ID = Mongoose.Types.ObjectId;
 const bcrypt = require('bcrypt-nodejs');
@@ -7,6 +8,11 @@ class CustomerController {
     /**'/customer' */
     index(req, res) {
         res.send('CUSTOMER');
+    }
+     /**'/customer/infokhachhangtheoid' */
+    async inFoKhachHang(req, res) {
+        const khachhang = await KhachHang.findOne({_id: req.body.id});
+        res.send(khachhang);
     }
     /**'/customer/themkhachhang' */
     async themKhachHang(req, res) {
