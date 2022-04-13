@@ -38,6 +38,13 @@ class EmployeeController{
                         info.hinhanh = imgs;
                     }   
                 }
+                if(info.chucvu ==='Nhân viên'){
+                    info.chucvu = 'nhanvien'
+                }
+                if(info.chucvu ==='Quản trị viên'){
+                    info.chucvu = 'admin'
+                }
+                
             let nhanvien = await NhanVien.findOne({_id: info._id})
             nhanvien.hoten = info.hoten;
             nhanvien.diachi = info.diachi;
@@ -101,6 +108,12 @@ class EmployeeController{
                 testemail=false
             }
         })
+        if(a.chucvu === 'Nhân viên'){
+            a.chucvu = 'nhanvien'
+        }
+        if(a.chucvu ==='Quản trị viên'){
+            a.chucvu ='admin'
+        }
 
         if(testemail===true && testsdt===true ){
             const nhanvien = new NhanVien({
