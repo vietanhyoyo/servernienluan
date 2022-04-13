@@ -9,11 +9,67 @@ class EmployeeController{
         res.send('NHAN VIEN');
     }
     
-    // Sửa thông tin n  hân viên
-   async suaNhanVien(req, res){
-        const sanpham = await SanPham.findById(req.id);
-        res.send()
+    async locNhanVien(req,res){
+        if(req.query.id === 'all'){
+            
+        }else{
+            NhanVien.find({ chucvu: req.query.id }, (err, nv) => {
+                if (err) console.log(err + ' đã có lỗi ');
+                else {
+                    nv = nv.map((c => c.toObject()));
+                    res.send(nv);
+                }
+            })
+        }
+        
     }
+
+
+    // Sửa thông tin n  hân viên
+    async suaNhanVien(req, res){
+        
+        if(req.body){
+            const info = req.body
+                if (info.hinhanh !== undefined) {  
+                    if(info.hinhanh.split('http://localhost:5001/?id=').length-1 === 1){
+                        info.hinhanh = info.hinhanh
+                    }else{
+                        const imgs = 'http://localhost:5001/?id=' + info.hinhanh;
+                        info.hinhanh = imgs;
+                    }   
+                }
+            let nhanvien = await NhanVien.findOne({_id: info._id})
+            nhanvien.hoten = info.hoten;
+            nhanvien.diachi = info.diachi;
+            nhanvien.email = info.email;
+            nhanvien.ngaysinh = info.ngaysinh;
+            nhanvien.hinhanh = info.hinhanh;
+            nhanvien.chucvu = info.chucvu;
+            nhanvien.gioitinh = info.gioitinh;   
+            nhanvien.save();
+            res.send(nhanvien);
+        }
+       
+    }
+
+    async xoaNhanVien(req,res){
+        if(req.body.id){
+           const c = req.body.id 
+           await  NhanVien.deleteOne({_id: c})
+           res.send('finishdelete');
+        }   
+    }
+
+    
+    
+    async laylaimatkhauNhanVien(req, res){
+        if(req.body.id){
+            let alo = await NhanVien.findOne({_id: req.body.id})
+            alo.matkhau = 'cuahangong7'
+            await alo.save();
+            res.send(alo.matkhau);
+        }
+     }
     
     
     
