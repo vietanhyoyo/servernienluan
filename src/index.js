@@ -35,6 +35,18 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 * 24 }/*Chu ki song 1 ngay */
 }))
 
+/******************************/
+
+/************Khai báo paypal */
+const paypal = require('paypal-rest-sdk');
+/**Cấu hình paypal */
+paypal.configure({
+    'mode': 'sandbox', //sandbox or live
+    'client_id': 'AaL54LXl9M2BUpwvP9MYYeD46AF4uj3NGYhBWg-q5FCzdJ4TsIlyE0KUp3auPPXf36AJQVxMjdfi4vab',
+    'client_secret': 'EKyqlO72BSlNWsVL3234EDD84fgz-7Vp_ZYx5GEZvWSGJ8sbbQvB2MD7CSF3lTwzkUBnAQIGrxcYlHlY'
+});
+
+
 /******************* */
 /**Tạo một kênh để chia sẽ hình ảnh lắng nghe ở cổng localhost:5001 */
 const url = require('url');
