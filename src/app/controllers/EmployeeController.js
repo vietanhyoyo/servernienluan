@@ -8,23 +8,143 @@ class EmployeeController{
     index(req, res){
         res.send('NHAN VIEN');
     }
-
-    /**'/employee/themnhanvien' */
-    async themNhanVien(req, res) {
-        const mk = await bcrypt.hashSync('12345678', bcrypt.genSaltSync(5), null)
-        const nhanvien = new NhanVien({
-            hoten: 'Hồ Quang Hiếu',
-            sdt: '9876543210',
-            matkhau: mk,
-            gioitinh: 'nam',
-            ngaysinh: new Date('07/03/2000'),
-            hinhanh: 'https://avatarfiles.alphacoders.com/201/201013.png',
-            diachi: 'đ 30/4',
-            chucvu: 'admin'
-        });
-        nhanvien.save()
-            .then(() => res.json(nhanvien));
+    
+    async locNhanVien(req,res){
+        if(req.query.id === 'all'){
+            
+        }else{
+            NhanVien.find({ chucvu: req.query.id }, (err, nv) => {
+                if (err) console.log(err + ' đã có lỗi ');
+                else {
+                    nv = nv.map((c => c.toObject()));
+                    res.send(nv);
+                }
+            })
+        }
+        
     }
+
+
+    // Sửa thông tin n  hân viên
+    async suaNhanVien(req, res){
+        
+        if(req.body){
+            const info = req.body
+                if (info.hinhanh !== undefined) {  
+                    if(info.hinhanh.split('http://localhost:5001/?id=').length-1 === 1){
+                        info.hinhanh = info.hinhanh
+                    }else{
+                        const imgs = 'http://localhost:5001/?id=' + info.hinhanh;
+                        info.hinhanh = imgs;
+                    }   
+                }
+            let nhanvien = await NhanVien.findOne({_id: info._id})
+            nhanvien.hoten = info.hoten;
+            nhanvien.diachi = info.diachi;
+            nhanvien.email = info.email;
+            nhanvien.ngaysinh = info.ngaysinh;
+            nhanvien.hinhanh = info.hinhanh;
+            nhanvien.chucvu = info.chucvu;
+            nhanvien.gioitinh = info.gioitinh;   
+            nhanvien.save();
+            res.send(nhanvien);
+        }
+       
+    }
+
+    async xoaNhanVien(req,res){
+        if(req.body.id){
+           const c = req.body.id 
+           await  NhanVien.deleteOne({_id: c})
+           res.send('finishdelete');
+        }   
+    }
+
+    
+    
+    async laylaimatkhauNhanVien(req, res){
+        if(req.body.id){
+            let alo = await NhanVien.findOne({_id: req.body.id})
+            alo.matkhau = 'cuahangong7'
+            await alo.save();
+            res.send(alo.matkhau);
+        }
+     }
+    
+    
+    
+    
+    /**'/employee/themnhanvien' */
+    async  themNhanVien(req, res) {  
+        let testemail = true;
+        let testsdt =true;
+        if(req.body){
+        
+        let thongbao='Themthanhcong';
+        let thongbaoemail ='dacoemail';
+        let thongbaosdt ='dacosdt';
+        let thongbaoca2 ='cahaiduocsudung'
+        const a  = req.body
+        if (a.hinhanh !== undefined) {      
+           const imgs = 'http://localhost:5001/?id=' + a.hinhanh;
+            a.hinhanh = imgs;
+        }
+        await NhanVien.find({ sdt: a.sdt })
+        .then((nv) => {
+            if (nv.length !== 0) {   
+                testsdt=false
+            }
+        })
+        await NhanVien.find({ email: a.email })
+        .then((email) => {
+            if (email.length !== 0) {   
+                testemail=false
+            }
+        })
+
+        if(testemail===true && testsdt===true ){
+            const nhanvien = new NhanVien({
+                hoten : a.hoten,
+                sdt : a.sdt,
+                matkhau : a.matkhau,
+                gioitinh : a.gioitinh,
+                ngaysinh : a.ngaysinh,
+                diachi : a.diachi,
+                chucvu : a.chucvu,
+                email : a.email,
+                hinhanh : a.hinhanh
+             })
+             nhanvien.save()
+             .then(() => {
+                    res.send(thongbao);
+             })
+        }else{
+            if(testemail === false && testsdt===false){
+                res.send(thongbaoca2)
+            }
+            if(testsdt === false && testemail ===true){
+                res.send(thongbaosdt)
+            }
+            if(testemail === false && testsdt===true){
+                res.send(thongbaoemail)
+            }
+        }  
+       }   
+    }
+
+
+
+    danhsachNhanVien(req, res) {
+        NhanVien.find({}, function (err, nhanvien) {
+            if (!err) {
+                nhanvien = nhanvien.map(c => c.toObject());
+                res.send(nhanvien);
+            } else res.status(400).json({ error: 'ERROR!!!' })
+        })
+    }
+
+    
+
 }
 
 module.exports = new EmployeeController;

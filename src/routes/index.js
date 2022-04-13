@@ -12,6 +12,7 @@ const loginRouter = require('./login')
 const siteRouter = require('./site')
 
 function route(app) {
+   
 
     app.use('/payment', paymentRouter)
     app.use('/employee', employeeRouter)
@@ -25,7 +26,7 @@ function route(app) {
     app.use('/login', loginRouter)
     app.use('/products', productsRouter)
     app.use('/', siteRouter)
-
+    
 }
 
 module.exports = route;

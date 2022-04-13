@@ -12,6 +12,7 @@ const NhanVien = new Schema({
     diachi: { type: String, maxlength: 255 },
     quanhuyen: { type: Schema.Types.ObjectId, ref: 'QuanHuyen' },
     chucvu: { type: String, maxlength: 50 },
+    email: { type: String, maxlength: 150 },
     createdAt: { type: Date, default: Date.now },
     updateAt: { type: Date, default: Date.now }
 }, {

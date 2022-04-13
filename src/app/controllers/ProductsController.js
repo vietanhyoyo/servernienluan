@@ -44,8 +44,7 @@ class ProductsController {
 
     /**Hien danh sach san pham trong csdl */
     async danhsachSanPham(req, res) {
-        /**$nin là ngoại trừ */
-        const sanpham = await SanPham.find({ trangthai: { $nin: 'Ẩn' } }).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
+        const sanpham = await SanPham.find({}).populate({ path: 'loaisanpham', model: 'LoaiSanPham' });
         res.send(sanpham)
     }
 
@@ -104,7 +103,7 @@ class ProductsController {
     /**Hien thi loai san pham co kem theo loai hang */
     async hienthiLoaiSanPham(req, res) {
         const loaisanpham = await LoaiSanPham.find({}).populate({ path: 'loaihang', model: 'LoaiHang' });
-        res.json(loaisanpham);
+        res.send(loaisanpham);
     }
 
     /**Them loai san pham/produsts/themloaisanpham */
