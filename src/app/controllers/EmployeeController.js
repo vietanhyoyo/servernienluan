@@ -44,7 +44,7 @@ class EmployeeController{
                 if(info.chucvu ==='Quản trị viên'){
                     info.chucvu = 'admin'
                 }
-                
+            
             let nhanvien = await NhanVien.findOne({_id: info._id})
             nhanvien.hoten = info.hoten;
             nhanvien.diachi = info.diachi;
@@ -66,13 +66,19 @@ class EmployeeController{
            res.send('finishdelete');
         }   
     }
+    async layNhanVienBangID(req,res){
+        if(req.body.id){
+            const a = await NhanVien.findById(req.body.id);
+            res.send(a);
+        }
+    }
 
-    
-    
+
     async laylaimatkhauNhanVien(req, res){
         if(req.body.id){
             let alo = await NhanVien.findOne({_id: req.body.id})
-            alo.matkhau = 'cuahangong7'
+            const mk = await bcrypt.hashSync('cuahangong7',bcrypt.genSaltSync(5),null);
+            alo.matkhau = mk
             await alo.save();
             res.send(alo.matkhau);
         }
@@ -114,12 +120,12 @@ class EmployeeController{
         if(a.chucvu ==='Quản trị viên'){
             a.chucvu ='admin'
         }
-
+        const mk = await bcrypt.hashSync(a.matkhau,bcrypt.genSaltSync(5),null);
         if(testemail===true && testsdt===true ){
             const nhanvien = new NhanVien({
                 hoten : a.hoten,
                 sdt : a.sdt,
-                matkhau : a.matkhau,
+                matkhau : mk,
                 gioitinh : a.gioitinh,
                 ngaysinh : a.ngaysinh,
                 diachi : a.diachi,
