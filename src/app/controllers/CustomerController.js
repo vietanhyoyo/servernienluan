@@ -9,9 +9,14 @@ class CustomerController {
     index(req, res) {
         res.send('CUSTOMER');
     }
+    /**update thông tin khách hàng */
+    async upDateInFo(req,res) {
+        const update = await KhachHang.updateOne({_id: req.body.load}, req.body.load)
+        .then(result => res.send(result))
+    }
      /**'/customer/infokhachhangtheoid' */
     async inFoKhachHang(req, res) {
-        const khachhang = await KhachHang.findOne({_id: req.body.id});
+        const khachhang = await KhachHang.findOne({_id: req.body.id}).populate({path: 'quanhuyen', model: 'QuanHuyen'});
         res.send(khachhang);
     }
     /**'/customer/themkhachhang' */
