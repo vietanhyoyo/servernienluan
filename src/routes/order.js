@@ -15,6 +15,7 @@ route.get('/laydonhangcanduyet', orderController.layDonHangCanDuyet)
 route.post('/laygiohangthanhtoan', orderController.layGioHangThanhToan)
 route.post('/hienthigiohang', orderController.hienThiGioHang)
 /**Xóa */
+route.post('/xoagiohang', orderController.xoaGioHang)
 route.post('/xoachitietdathang',orderController.xoaChiTietDatHang)
 /**Thêm */
 route.post('/themchitietdathang', orderController.themChiTietDatHang)

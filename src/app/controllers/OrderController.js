@@ -222,6 +222,13 @@ class OrderController {
                 .then(result => res.send(result));
         } else res.send('Hủy thất bại!')
     }
+
+    /**Xóa giỏ hàng */
+    xoaGioHang(req, res) {
+        ChiTietDatHang.deleteMany({ dathang: req.body._id })
+        .then(result => res.send(result));
+
+    }
 }
 
 module.exports = new OrderController;
