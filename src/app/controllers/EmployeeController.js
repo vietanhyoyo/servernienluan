@@ -2,7 +2,8 @@
 const Mongoose = require('mongoose');
 const ID = Mongoose.Types.ObjectId;
 const NhanVien = require('../models/NhanVien')
-const bcrypt = require('bcrypt-nodejs')
+const bcrypt = require('bcrypt-nodejs');
+const { find } = require('../models/NhanVien');
 
 class EmployeeController{
     index(req, res){
@@ -26,9 +27,10 @@ class EmployeeController{
 
 
     // Sửa thông tin n  hân viên
-    async suaNhanVien(req, res){
-        
+    async suaNhanVien(req, res){  
         if(req.body){
+            let testemail = true
+            let testsdt = true
             const info = req.body
                 if (info.hinhanh !== undefined) {  
                     if(info.hinhanh.split('http://localhost:5001/?id=').length-1 === 1){
@@ -44,19 +46,35 @@ class EmployeeController{
                 if(info.chucvu ==='Quản trị viên'){
                     info.chucvu = 'admin'
                 }
-            
-            let nhanvien = await NhanVien.findOne({_id: info._id})
-            nhanvien.hoten = info.hoten;
-            nhanvien.diachi = info.diachi;
-            nhanvien.email = info.email;
-            nhanvien.ngaysinh = info.ngaysinh;
-            nhanvien.hinhanh = info.hinhanh;
-            nhanvien.chucvu = info.chucvu;
-            nhanvien.gioitinh = info.gioitinh;   
-            nhanvien.save();
-            res.send(nhanvien);
-        }
-       
+                
+                // Cập nhật sửa ( tìm sđt đã có trong cơ sở dữ liệu)
+              
+                const checksdt = await NhanVien.find({ _id: {$ne : info._id} })
+                const sdtnv = checksdt.map(ele => ele.sdt)
+                testsdt = !sdtnv.includes(info.sdt)
+
+                const checkemail = await NhanVien.find({ _id: {$ne : info._id} })
+                const emailnv = checkemail.map(ele => ele.email)
+                testemail    = !emailnv.includes(info.email)
+
+                if(testsdt === true && testemail === true){
+                    await NhanVien.updateOne({_id: info._id},info)
+                    res.send('updatesuccessfully');
+                }else{
+                    if(testsdt === true && testemail === false){
+                        res.send('Email đã được sử dụng')
+                    }
+                    if(testsdt === false && testemail === true){
+                        res.send('Số điện thoại đã được sử dụng')
+                    }
+                    if(testsdt === false && testemail === false){
+                        res.send('Số điện thoại và email đã được sử dụng')
+                    }
+                }
+           
+                    
+           
+            }   
     }
 
     async xoaNhanVien(req,res){
@@ -106,6 +124,7 @@ class EmployeeController{
         .then((nv) => {
             if (nv.length !== 0) {   
                 testsdt=false
+                
             }
         })
         await NhanVien.find({ email: a.email })
@@ -153,17 +172,18 @@ class EmployeeController{
 
 
 
-    danhsachNhanVien(req, res) {
+  async danhsachNhanVien(req, res) {
         NhanVien.find({}, function (err, nhanvien) {
             if (!err) {
-                nhanvien = nhanvien.map(c => c.toObject());
-                res.send(nhanvien);
+            nhanvien = nhanvien.map(c => c.toObject() );
+            res.send(nhanvien)
             } else res.status(400).json({ error: 'ERROR!!!' })
-        })
+        }) 
+
     }
-
+  
     
-
+    
 }
 
 module.exports = new EmployeeController;

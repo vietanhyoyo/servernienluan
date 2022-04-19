@@ -9,10 +9,10 @@ const evaluateRouter = require('./evaluate')
 const messageRouter = require('./message')
 const loginRouter = require('./login')
 const siteRouter = require('./site')
-
+const statisticalRouter = require('./statistical')
 function route(app) {
    
-
+    app.use('/statistical',statisticalRouter )
     app.use('/employee', employeeRouter)
     app.use('/order', orderRouter)
     app.use('/evaluate', evaluateRouter)

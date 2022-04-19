@@ -10,8 +10,10 @@ class OrderController {
     /** Hiển thị giỏ hàng */
     async hienThiGioHang(req, res){
         const order = await DatHang.findOne({khachhang: req.body.khachhang, trangthai: 'giỏ hàng' })
+        if(order ===null) res.send('');
+        else{
         const chitietdathang = await ChiTietDatHang.find({dathang: order._id}).populate({ path: 'sanpham', model: 'SanPham' });
-        res.send(chitietdathang);
+        res.send(chitietdathang);}
     }
 
     themDatHang(req, res) {

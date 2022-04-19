@@ -7,4 +7,4 @@ route.get('/danhsachkhachhang', customerController.danhsachKhachHang)
 route.post('/themkhachhang', customerController.themKhachHang)
 route.get('/', customerController.index);
 
-module.exports = route;
+module.exports = route; 
