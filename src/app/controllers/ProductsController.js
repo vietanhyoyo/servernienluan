@@ -218,11 +218,52 @@ class ProductsController {
     }
 
     /*Tìm kiếm tên sản phẩm */
-    timtenSanPham(req, res, next) {
-        const data = req.body.id;
-        SanPham.find({ 'tensanpham': new RegExp(data, 'i') })
-            .then(data => res.send(data))
-            .catch(next);
+    async timtenSanPham(req, res) {
+        const da = req.body.id;
+        const sanpham = await SanPham.find({ 'tensanpham': new RegExp(da, 'i'), trangthai: { $nin: 'Ẩn' } })
+        const data = [];
+        for (let i = 0; i < sanpham.length; i++) {
+            const giasanpham = await GiaSanPham.findOne({ sanpham: sanpham[i]._id })
+                .populate({ path: 'khuyenmai', model: 'KhuyenMai', select: 'phantram' })
+                .select('_id giaban khuyenmai')
+
+            const newEle = {
+                _id: sanpham[i]._id,
+                tensanpham: sanpham[i].tensanpham,
+                hinhanh: sanpham[i].hinhanh,
+                gianiemyet: sanpham[i].gianiemyet,
+                donvitinh: sanpham[i].donvitinh,
+                giasanpham: giasanpham
+            }
+            data.push(newEle);
+        }
+        res.send(data);
+    }
+
+    /**Tìm sản phẩm mà có khuyến mãi */
+    async timSanPhamKhuyenMai(req, res) {
+
+        const sanpham = await SanPham.find({ trangthai: { $nin: 'Ẩn' } })
+        const data = [];
+
+
+        for (let i = 0; i < sanpham.length; i++) {
+            const giasanpham = await GiaSanPham.findOne({ sanpham: sanpham[i]._id })
+                .populate({ path: 'khuyenmai', model: 'KhuyenMai', select: 'phantram' })
+                .select('_id giaban khuyenmai')
+
+            const newEle = {
+                _id: sanpham[i]._id,
+                tensanpham: sanpham[i].tensanpham,
+                hinhanh: sanpham[i].hinhanh,
+                gianiemyet: sanpham[i].gianiemyet,
+                donvitinh: sanpham[i].donvitinh,
+                giasanpham: giasanpham
+            }
+            if (giasanpham.khuyenmai !== null)
+                data.push(newEle);
+        }
+        res.send(data);
     }
 
     // layHinhAnh(req, res) {

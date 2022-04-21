@@ -73,8 +73,9 @@ class KhuyenMaiController {
             });
 
             promotion.danhsachsanpham = new_arr;
-            KhuyenMai.updateOne({ _id: promotion._id }, promotion)
-                .then(() => res.send(promotion));
+            await KhuyenMai.updateOne({ _id: promotion._id }, promotion)
+            await priceController.capNhatGiaSanPhamTheoKhuyenMai(idSP);
+            res.send(promotion)
         }
     }
 }
