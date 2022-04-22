@@ -10,11 +10,8 @@ const evaluateRouter = require('./evaluate')
 const messageRouter = require('./message')
 const loginRouter = require('./login')
 const siteRouter = require('./site')
-<<<<<<< HEAD
-const js = require('./js')
-=======
 const statisticalRouter = require('./statistical')
->>>>>>> 255169ca4eca3f443570c04ca8db7c1d79920ecf
+const js = require('./js')
 function route(app) {
    
     app.use('/chart2', js)
