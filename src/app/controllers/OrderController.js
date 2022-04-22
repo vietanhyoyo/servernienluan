@@ -237,8 +237,8 @@ class OrderController {
         const dathang = await DatHang.find({ khachhang: id })
             .populate({ path: 'khachhang', model: 'KhachHang' })
             .sort('-_id')
-            .where({ trangthai: {$ne: 'giỏ hàng'}})
-        
+            .where({ trangthai: { $ne: 'giỏ hàng' } })
+
         let data = [];
 
         /**Kết nối quận huyện */
@@ -253,6 +253,11 @@ class OrderController {
             data.push(doc);
         }
         res.send(data);
+    }
+    capnhatSLChiTietDatHang(req, res) {
+        if (req.body._id)
+            ChiTietDatHang.updateOne({ _id: req.body._id }, { soluong: req.body.sl, gia: req.body.gia })
+                .then(() => res.send('đã cập nhật chi tiết đặt hàng'));
     }
 }
 

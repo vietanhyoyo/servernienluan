@@ -10,8 +10,8 @@ class CustomerController {
         res.send('CUSTOMER');
     }
     /**update thông tin khách hàng */
-    async upDateInFo(req,res) {
-        const update = await KhachHang.updateOne({_id: req.body.load}, req.body.load)
+    upDateInFo(req,res) {
+        KhachHang.updateOne({_id: req.body.id}, req.body.load)
         .then(result => res.send(result))
     }
      /**'/customer/infokhachhangtheoid' */

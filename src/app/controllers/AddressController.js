@@ -21,7 +21,7 @@ class AddressController{
 
     themTinhTP(req, res) {
         const TinhTP = new TinhThanhPho({
-                ten: 'Cần Thơ' ,    
+                ten: 'Đồng Tháp' ,    
             });
         TinhTP.save()
             .then( () => console.log('Tao model thanh cong'));
@@ -30,8 +30,8 @@ class AddressController{
     /**'/address/themquanhuyen' */
     themQuanHuyen(req, res) {
         const quanhuyen = new QuanHuyen({
-                ten: 'quận Cái Răng' , 
-                tinhtp: ID('6221b8337e0ce52dbd718fa7')
+                ten: 'thành phố Cao Lãnh' , 
+                tinhtp: ID('6262b1b42cd324dd3061acfc')
             });
         quanhuyen.save()
             .then( () => console.log('Tao model thanh cong'))

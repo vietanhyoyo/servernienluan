@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const QuanHuyen = new Schema({
-    ten: { type: String, unique: true, require: true },
+    ten: { type: String, require: true },
     tinhtp: { type: Schema.Types.ObjectId, ref: 'TinhThanhPho' }
 },{
     timestamps: true

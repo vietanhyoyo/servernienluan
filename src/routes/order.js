@@ -5,6 +5,7 @@ const orderController = require('../app/controllers/OrderController')
 
 
 /**Cập nhật */
+route.post('/capnhatsoluongchitietdathang', orderController.capnhatSLChiTietDatHang)
 route.post('/huydonhang', orderController.huyDonHang)
 route.post('/xacnhandathang', orderController.xacNhanDatHang)
 route.post('/tinhtongtiendathang', orderController.tinhTongTienDatHang)
