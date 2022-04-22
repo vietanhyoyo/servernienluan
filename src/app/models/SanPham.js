@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const SanPham = new Schema({
     tensanpham: { type: String, maxLength: 255, unique: true },
-    mota: { type: String, maxLength: 1200 },
+    mota: { type: String, maxLength: 2000 },
     hinhanh: [{ type: String, maxLength: 255 }],
     loaisanpham: {
         type: Schema.Types.ObjectId,

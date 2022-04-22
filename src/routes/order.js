@@ -10,6 +10,7 @@ route.post('/xacnhandathang', orderController.xacNhanDatHang)
 route.post('/tinhtongtiendathang', orderController.tinhTongTienDatHang)
 route.get('/capnhatdathang', orderController.capnhatDatHang)
 /**Hien thi */
+route.post('/laydonhangcuakhachhang', orderController.layDonHangCuaKhachHang)
 route.post('/laychitietdathang', orderController.layCacChiTietDatHang)
 route.get('/laydonhangcanduyet', orderController.layDonHangCanDuyet)
 route.post('/laygiohangthanhtoan', orderController.layGioHangThanhToan)

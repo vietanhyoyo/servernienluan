@@ -153,14 +153,14 @@ class OrderController {
     /**layDonHangCanDuyet */
     async layDonHangCanDuyet(req, res) {
         const dathang = await DatHang.find({ trangthai: 'chờ duyệt' })
-            .populate({ path: 'khachhang', model: 'KhachHang' })
-        let data = []
+            .populate({ path: 'khachhang', model: 'KhachHang' });
+        let data = [];
         for (let i = 0; i < dathang.length; i++) {
             let element = { ...dathang[i] };
             let doc = element._doc;
             if (doc.khachhang.quanhuyen !== undefined) {
                 const quanhuyen = await QuanHuyen.findById(doc.khachhang.quanhuyen)
-                    .populate({ path: 'tinhtp', model: 'TinhThanhPho' })
+                    .populate({ path: 'tinhtp', model: 'TinhThanhPho' });
                 doc.khachhang.quanhuyen = quanhuyen;
             }
             data.push(doc);
@@ -173,7 +173,7 @@ class OrderController {
         if (req.body.id !== undefined) {
             const chitietdathang = await ChiTietDatHang.find({ dathang: req.body.id })
                 .populate({ path: 'sanpham', model: 'SanPham', select: '_id tensanpham hinhanh gianiemyet donvitinh' })
-            res.send(chitietdathang)
+            res.send(chitietdathang);
 
         } else res.send('Không có dữ liệu')
     }
@@ -226,8 +226,33 @@ class OrderController {
     /**Xóa giỏ hàng */
     xoaGioHang(req, res) {
         ChiTietDatHang.deleteMany({ dathang: req.body._id })
-        .then(result => res.send(result));
+            .then(result => res.send(result));
 
+    }
+
+    /**Lấy đơn hàng của khách hàng */
+    async layDonHangCuaKhachHang(req, res) {
+        const id = req.body._id;
+
+        const dathang = await DatHang.find({ khachhang: id })
+            .populate({ path: 'khachhang', model: 'KhachHang' })
+            .sort('-_id')
+            .where({ trangthai: {$ne: 'giỏ hàng'}})
+        
+        let data = [];
+
+        /**Kết nối quận huyện */
+        for (let i = 0; i < dathang.length; i++) {
+            let element = { ...dathang[i] };
+            let doc = element._doc;
+            if (doc.khachhang.quanhuyen !== undefined) {
+                const quanhuyen = await QuanHuyen.findById(doc.khachhang.quanhuyen)
+                    .populate({ path: 'tinhtp', model: 'TinhThanhPho' });
+                doc.khachhang.quanhuyen = quanhuyen;
+            }
+            data.push(doc);
+        }
+        res.send(data);
     }
 }
 
