@@ -15,8 +15,8 @@ class AddressController{
     }
 
     async danhsachQuanHuyen(req,res) {
-        const quanhuyen = await QuanHuyen.find({}).populate({path:'tinhtp',model:'TinhThanhPho'});
-        res.json(quanhuyen);
+        const quanhuyen = await QuanHuyen.find()   
+            res.send(quanhuyen);   
     }
 
     themTinhTP(req, res) {

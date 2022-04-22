@@ -20,6 +20,7 @@ route.get('/capnhatgiasanpham', productsController.capnhatGiaSanPham)
 /**Hien thi */
 
 //route.get('/hinhanh', productsController.layHinhAnh)
+route.get('/timsanphamkhuyenmai', productsController.timSanPhamKhuyenMai)
 route.post('/timsanphamtheoid', productsController.timSanPhamTheoID)
 route.post('/timtensanpham', productsController.timtenSanPham)
 route.post('/loaisanphamid', productsController.traveLoaiSanPhamID)

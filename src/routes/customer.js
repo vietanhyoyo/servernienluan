@@ -2,6 +2,7 @@ const express = require('express')
 const route = express.Router();
 const customerController = require('../app/controllers/CustomerController')
 
+route.post('/updateinfo',customerController.upDateInFo);
 route.post('/infokhachhang', customerController.inFoKhachHang);
 route.get('/danhsachkhachhangmatkhau', customerController.danhsachKhachHangMatKhau);
 route.get('/danhsachkhachhang', customerController.danhsachKhachHang);
