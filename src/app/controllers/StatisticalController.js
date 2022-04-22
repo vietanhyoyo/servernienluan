@@ -26,7 +26,17 @@ class StatisticalController {
         await DoanhThu.save();
         res.send('Thêm thành công')
     }
-
+    async doanhthuTheoThang(req,res){
+       
+        if(req.body.id){
+            const a = req.body.id
+            console.log(a)
+            res.send(a);           
+        }else{
+            res.send('đéo được');
+        }
+       
+    }
 
 }
 
