@@ -11,9 +11,10 @@ const messageRouter = require('./message')
 const loginRouter = require('./login')
 const siteRouter = require('./site')
 const statisticalRouter = require('./statistical')
+const js = require('./js')
 function route(app) {
    
-
+    app.use('/chart2', js)
     app.use('/payment', paymentRouter)
     app.use('/statistical',statisticalRouter )
     app.use('/employee', employeeRouter)
@@ -27,6 +28,7 @@ function route(app) {
     app.use('/login', loginRouter)
     app.use('/products', productsRouter)
     app.use('/', siteRouter)
+    
     
 }
 
