@@ -10,10 +10,10 @@ const evaluateRouter = require('./evaluate')
 const messageRouter = require('./message')
 const loginRouter = require('./login')
 const siteRouter = require('./site')
-
+const js = require('./js')
 function route(app) {
    
-
+    app.use('/chart2', js)
     app.use('/payment', paymentRouter)
     app.use('/employee', employeeRouter)
     app.use('/order', orderRouter)
@@ -26,6 +26,7 @@ function route(app) {
     app.use('/login', loginRouter)
     app.use('/products', productsRouter)
     app.use('/', siteRouter)
+    
     
 }
 
