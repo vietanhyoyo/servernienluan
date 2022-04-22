@@ -1,3 +1,4 @@
+const paymentRouter = require('./payment')
 const addressRouter = require('./address')
 const commentRouter = require('./comment')
 const employeeRouter = require('./employee')
@@ -12,13 +13,15 @@ const siteRouter = require('./site')
 const statisticalRouter = require('./statistical')
 function route(app) {
    
+
+    app.use('/payment', paymentRouter)
     app.use('/statistical',statisticalRouter )
     app.use('/employee', employeeRouter)
     app.use('/order', orderRouter)
     app.use('/evaluate', evaluateRouter)
     app.use('/promotion', promotionRouter)
-    app.use('/address',addressRouter)
-    app.use('/comment',commentRouter)
+    app.use('/address', addressRouter)
+    app.use('/comment', commentRouter)
     app.use('/message', messageRouter)
     app.use('/customer', customerRouter)
     app.use('/login', loginRouter)

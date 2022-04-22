@@ -10,6 +10,7 @@ class StatisticalController {
 
     async dsdoanhso(req,res){
         DoanhSo.find({}, function (err, doanhso) {
+            console.log(doanhso)
             if (!err) {
                 doanhso = doanhso.map(c => c.toObject());
                 res.send(doanhso);

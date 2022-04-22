@@ -43,6 +43,7 @@ class PriceController {
 
             if (khuyenmai !== null) {
                 let gia = (100 - khuyenmai.phantram) * 0.01 * sanpham.gianiemyet;
+                gia = Number(gia.toFixed(0))
                 await GiaSanPham.updateOne({ sanpham: idProduct }, { giaban: gia, khuyenmai: khuyenmai._id })
             }
             else {

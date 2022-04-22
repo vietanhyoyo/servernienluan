@@ -35,6 +35,8 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 * 24 }/*Chu ki song 1 ngay */
 }))
 
+/******************************/
+
 /******************* */
 /**Tạo một kênh để chia sẽ hình ảnh lắng nghe ở cổng localhost:5001 */
 const url = require('url');

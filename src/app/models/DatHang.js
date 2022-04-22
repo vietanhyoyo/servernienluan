@@ -6,6 +6,7 @@ const DatHang = new Schema({
     trangthai: { type: String, maxlength: 50 },
     ngaydat: { type: Date, default: Date.now },
     ngayduyet: { type: Date },
+    dathanhtoan: { type: Boolean , default: false},
     tongtien: { type: Number, default: 0 }
 })
 

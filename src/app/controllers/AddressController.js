@@ -9,10 +9,14 @@ class AddressController{
     index(req, res) {
         res.send('Address')
     }
-     
+    async danhsachTinh(req,res) {
+        const tinh = await TinhThanhPho.find({});
+        res.json(tinh);
+    }
+
     async danhsachQuanHuyen(req,res) {
-        const quanhuyen = await QuanHuyen.find({}).populate({path:'tinhtp',model:'TinhThanhPho'});
-        res.json(quanhuyen);
+        const quanhuyen = await QuanHuyen.find()   
+            res.send(quanhuyen);   
     }
 
     themTinhTP(req, res) {
