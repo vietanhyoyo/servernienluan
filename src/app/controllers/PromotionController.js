@@ -51,13 +51,22 @@ class KhuyenMaiController {
 
     }
     /**Xoa khuyen mai */
-    xoaKhuyenMai(req, res) {
-        const promotion = req.body.promotion;
-        KhuyenMai.deleteOne({ _id: promotion._id }, (err) => {
-            if (!err) {
-                res.send(promotion)
+    async xoaKhuyenMai(req, res) {
+        if (req.body.promotion) {
+            const promotion = req.body.promotion;
+
+            /**Lay danh sach san pham */
+            const sp = promotion.danhsachsanpham;
+
+            await KhuyenMai.deleteOne({ _id: promotion._id })
+
+            for (let i = 0; i < sp.length; i++) {
+                await priceController.capNhatGiaSanPhamTheoKhuyenMai(sp[i]);
             }
-        })
+
+            res.send('Da xoa khuyen mai');
+        }
+        else res.send('Loi');
     }
     /**Xóa sản phẩm khuyến mãi */
     async xoaSanPham(req, res) {
